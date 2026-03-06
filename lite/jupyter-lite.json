@@ -119,8 +119,7 @@
       "@jupyterlab/debugger-extension:consoles",
 
       "@jupyterlite/application-extension:about",
-      "@jupyterlite/application-extension:logo",
-      "@jupyterlite/application-extension:share-file"
+      "@jupyterlite/application-extension:logo"
     ]
   }
 }

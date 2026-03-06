@@ -3,7 +3,6 @@
   "jupyter-config-data": {
     "appName": "Jupyter Everywhere",
     "defaultUrl": "/lab",
-    "sharing_service_api_url": "https://jupytereverywhere.coursekata.org/api/v1",
     "mode": "single-document",
     "contentsStorageName": "JupyterEverywhere Storage",
     "settingsStorageName": "JupyterEverywhere Storage",

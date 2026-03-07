@@ -1,6 +1,7 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
-import { Dialog, showDialog, ReactWidget, Notification, Widget } from '@jupyterlab/apputils';
+import { Dialog, showDialog, ReactWidget, Notification } from '@jupyterlab/apputils';
+import { Widget } from '@lumino/widgets';
 import { PageConfig } from '@jupyterlab/coreutils';
 import { INotebookContent } from '@jupyterlab/nbformat';
 import { IStateDB, StateDB } from '@jupyterlab/statedb';

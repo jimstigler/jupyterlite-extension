@@ -212,45 +212,75 @@ const plugin: JupyterFrontEndPlugin<void> = {
     /**
      * 1. A "Download as IPyNB" command.
      */
-    commands.addCommand(Commands.downloadNotebookCommand, {
-      label: 'Download as a notebook',
-      execute: args => {
-        void args;
+commands.addCommand(Commands.downloadNotebookCommand, {
+  label: 'Download as a notebook',
+  execute: async args => {
+    void args;
 
-        // Clear all sharing-specific metadata before download
-        const panel = readonlyTracker.currentWidget ?? tracker.currentWidget;
+    const panel = readonlyTracker.currentWidget ?? tracker.currentWidget;
 
-        if (!panel) {
-          console.warn('No active notebook to download');
-          return;
-        }
+    if (!panel) {
+      console.warn('No active notebook to download');
+      return;
+    }
 
-        const content = panel.context.model.toJSON() as INotebookContent;
+    const content = panel.context.model.toJSON() as INotebookContent;
 
-        // Remove sharing-specific metadata
-        const purgedMetadata = { ...content.metadata };
-        delete purgedMetadata.isSharedNotebook;
-        delete purgedMetadata.sharedId;
-        delete purgedMetadata.readableId;
-        delete purgedMetadata.sharedName;
-        delete purgedMetadata.lastShared;
+    // Remove sharing-specific metadata
+    const purgedMetadata = { ...content.metadata };
+    delete purgedMetadata.isSharedNotebook;
+    delete purgedMetadata.sharedId;
+    delete purgedMetadata.readableId;
+    delete purgedMetadata.sharedName;
+    delete purgedMetadata.lastShared;
 
-        // Ensure that we preserve kernelspec metadata if present
-        const kernelSpec = content.metadata?.kernelspec;
-        if (kernelSpec) {
-          purgedMetadata.kernelspec = kernelSpec;
-        }
+    // Preserve kernelspec metadata if present
+    const kernelSpec = content.metadata?.kernelspec;
+    if (kernelSpec) {
+      purgedMetadata.kernelspec = kernelSpec;
+    }
 
-        const cleanedContent: INotebookContent = {
-          ...content,
-          metadata: purgedMetadata
-        };
-        panel.context.model.fromJSON(cleanedContent);
+    const cleanedContent: INotebookContent = {
+      ...content,
+      metadata: purgedMetadata
+    };
 
-        // Execute the built-in download command with the cleaned model
-        return commands.execute('docmanager:download');
-      }
+    const suggestedName =
+      panel.context.path && panel.context.path !== 'Untitled.ipynb'
+        ? panel.context.path.replace(/\.ipynb$/i, '')
+        : generateDefaultNotebookName();
+
+    const input = document.createElement('input');
+    input.value = suggestedName;
+    input.style.width = '100%';
+
+    const result = await showDialog({
+      title: 'Download notebook as…',
+      body: ReactWidget.create(input),
+      buttons: [Dialog.cancelButton(), Dialog.okButton({ label: 'Download' })]
     });
+
+    if (!result.button.accept) {
+      return;
+    }
+
+    const rawName = input.value.trim() || suggestedName;
+    const fileName = rawName.toLowerCase().endsWith('.ipynb') ? rawName : `${rawName}.ipynb`;
+
+    const blob = new Blob([JSON.stringify(cleanedContent, null, 2)], {
+      type: 'application/json'
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+});
 
     /**
      * 2. A "Download as PDF" command.

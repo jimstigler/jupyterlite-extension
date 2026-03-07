@@ -46,6 +46,14 @@
           }
         ]
       },
+      "@jupyterlab/notebook-extension:panel": {
+        "toolbar": [
+   		 {
+           "name": "save",
+           "disabled": true
+   		  }
+ 		]
+	  },
       "@jupyterlab/application-extension:shell": {
         "startMode": "single"
       },

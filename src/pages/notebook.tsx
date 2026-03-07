@@ -1,5 +1,4 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
-import { handleNotebookUpload, openNotebookContent } from '../upload';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
@@ -13,6 +12,7 @@ import { SharingService } from '../sharing-service';
 import { VIEW_ONLY_NOTEBOOK_FACTORY, IViewOnlyNotebookTracker } from '../view-only';
 import { KernelSwitcherDropdownButton } from '../ui-components/KernelSwitcherDropdownButton';
 import { KERNEL_URL_TO_NAME, KERNEL_DISPLAY_NAMES } from '../kernels';
+import { handleNotebookUpload, openNotebookContent } from '../upload';
 
 /**
  * Maps the notebook content language to a kernel name. We currently
@@ -120,10 +120,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
         const { content }: { content: INotebookContent } = notebookResponse;
 
         // We make all cells read-only by setting editable: false.
-        // This is still required with a custom widget factory as
-        // it is not trivial to coerce the cells to respect the `readOnly`
-        // property otherwise (Mike tried swapping `Notebook.ContentFactory`
-        // and it does not work without further hacks).
         if (content.cells) {
           content.cells.forEach(cell => {
             cell.metadata = {
@@ -148,10 +144,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           content,
           format: 'json',
           type: 'notebook',
-          // Even though we have a custom view-only factory, we still
-          // want to indicate that notebook is read-only to avoid
-          // error on Ctrl + S and instead get a nice notification that
-          // the notebook cannot be saved unless using save-as.
           writable: false
         });
 
@@ -204,41 +196,10 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
         console.error('Failed to create new notebook:', error);
       }
     };
-    
-    const openNotebookFromURL = async (): Promise<void> => {
-      const url = window.prompt('Enter the URL of a .ipynb notebook file:');
-      if (!url) {
-        return;
-      }
-
-      try {
-        let fetchUrl = url.trim();
-
-        // Convert normal GitHub blob URLs to raw.githubusercontent URLs
-        if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
-          fetchUrl = fetchUrl
-            .replace('https://github.com/', 'https://raw.githubusercontent.com/')
-            .replace('/blob/', '/');
-        }
-
-        const response = await fetch(fetchUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
-        }
-
-        const parsed = (await response.json()) as INotebookContent;
-        await openNotebookContent(parsed);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.error('Failed to open notebook from URL:', error);
-        window.alert(`Failed to open notebook from URL:\n${message}`);
-      }
-    };
 
     const openUploadedNotebook = async (id: string): Promise<void> => {
       try {
         const raw = localStorage.getItem(`uploaded-notebook:${id}`);
-        // Should not happen
         if (!raw) {
           console.warn(`No uploaded notebook found for ID: ${id}`);
           await createNewNotebook();
@@ -276,6 +237,39 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       }
     };
 
+    /**
+     * Open notebook from URL
+     */
+    const openNotebookFromURL = async (): Promise<void> => {
+      const url = window.prompt('Enter the URL of a .ipynb notebook file:');
+      if (!url) {
+        return;
+      }
+
+      try {
+        let fetchUrl = url.trim();
+
+        // Convert normal GitHub blob URLs to raw.githubusercontent URLs
+        if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
+          fetchUrl = fetchUrl
+            .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+            .replace('/blob/', '/');
+        }
+
+        const response = await fetch(fetchUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
+        }
+
+        const parsed = (await response.json()) as INotebookContent;
+        await openNotebookContent(parsed);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error('Failed to open notebook from URL:', error);
+        window.alert(`Failed to open notebook from URL:\n${message}`);
+      }
+    };
+
     // If a notebook ID is provided in the URL (whether shared or uploaded),
     // load it; otherwise, create a new notebook
     if (notebookId) {
@@ -288,8 +282,7 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
 
     tracker.widgetAdded.connect(async (_, panel) => {
       await panel.sessionContext.ready;
-      // Remove kernel URL param after notebook kernel is ready, as
-      // we don't want it to linger and confuse users.
+      // Remove kernel URL param after notebook kernel is ready
       const url = new URL(window.location.href);
       if (url.searchParams.has('kernel')) {
         url.searchParams.delete('kernel');
@@ -348,41 +341,45 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
             }
           })
       );
-toolbarRegistry.addFactory(
-  toolbarName,
-  'upload',
-  () =>
-    new ToolbarButton({
-      label: 'Upload',
-      tooltip: 'Upload a notebook',
-      onClick: () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.ipynb,application/json';
-        input.onchange = async () => {
-          const file = input.files?.[0];
-          if (!file) {
-            return;
-          }
-          await handleNotebookUpload(file);
-        };
-        input.click();
-      }
-    })
-);
 
-toolbarRegistry.addFactory(
-  toolbarName,
-  'openFromURL',
-  () =>
-    new ToolbarButton({
-      label: 'OPEN URL TEST',
-      tooltip: 'Open notebook from URL',
-      onClick: () => {
-        void openNotebookFromURL();
-      }
-    })
-);
+      toolbarRegistry.addFactory(
+        toolbarName,
+        'upload',
+        () =>
+          new ToolbarButton({
+            label: 'Open',
+            tooltip: 'Open a notebook from a file or URL',
+            onClick: () => {
+              const choice = window.prompt(
+                'Type "file" to open a local notebook, or "url" to open a notebook from a URL:',
+                'file'
+              );
+
+              if (!choice) {
+                return;
+              }
+
+              const mode = choice.trim().toLowerCase();
+
+              if (mode === 'url') {
+                void openNotebookFromURL();
+                return;
+              }
+
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.ipynb,application/json';
+              input.onchange = async () => {
+                const file = input.files?.[0];
+                if (!file) {
+                  return;
+                }
+                await handleNotebookUpload(file);
+              };
+              input.click();
+            }
+          })
+      );
 
       toolbarRegistry.addFactory(
         toolbarName,
@@ -414,7 +411,6 @@ toolbarRegistry.addFactory(
           const base = (router?.base || '').replace(/\/$/, '');
           const canonical = new URL(`${base}/lab/index.html`, window.location.origin);
           canonical.hash = after.hash;
-          // Keep any other non-tab params off; Notebook page doesn't need them
           if (
             after.pathname + after.search + after.hash !==
             canonical.pathname + canonical.search + canonical.hash

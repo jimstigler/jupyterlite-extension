@@ -55,7 +55,7 @@ export async function handleNotebookUpload(file: File): Promise<void> {
     localStorage.setItem(`uploaded-notebook:${uploadId}`, serialised);
 
     // We can now redirect to JupyterLite with this notebook.
-    window.location.href = `lab/index.html?uploaded-notebook=${uploadId}`;
+    window.location.href = `/jupyterlite-extension/lab/index.html?uploaded-notebook=${uploadId}`;
   } catch (err) {
     if (err instanceof DOMException && err.name === 'QuotaExceededError') {
       const result = await showDialog({

@@ -1,70 +1,449 @@
 /*
-    CourseKata Jupyter Everywhere - Build-Safe Version
-    Removed external imports and simplified variables to prevent build errors.
+    See the JupyterLab Developer Guide for useful CSS Patterns:
+
+    https://jupyterlab.readthedocs.io/en/stable/developer/css.html
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+#jp-menu-panel,
+#jp-top-bar,
+#jp-top-panel,
+.jp-LabShell[data-shell-mode='single-document'] #jp-menu-panel,
+.jp-LabShell[data-shell-mode='single-document'] #jp-top-bar {
+  /* Hide the empty menu panel widget */
+  min-height: 0;
+  display: none;
+}
+
 :root {
-  /* Brand Colors */
-  --ck-blue: #007bff;
-  --ck-navy: #002d72;
-  --ck-border: #dee2e6;
-  
-  /* Override Jupyter variables directly */
-  --jp-brand-color1: var(--ck-blue) !important;
-  --jp-brand-color0: var(--ck-navy) !important;
-  --jp-ui-font-family: -apple-system, system-ui, sans-serif !important;
+  --je-scale: 0.85;
+  --je-slate-blue: #412c88;
+  --je-round-corners: 12px;
+  --je-round-corners-filetiles: 6px;
+  --je-font-family: 'Inter', sans-serif;
+  --je-dialog-round-corners: 12px;
+  --je-cell-height: 40px;
+  --je-toastify-z-index: calc(var(--toastify-z-index) + 2);
+  --je-document-padding: calc(var(--je-scale) * 51px);
+  --je-sidebar-width: calc(var(--je-scale) * 110px);
+  --je-toolbar-height: calc(var(--je-scale) * 67px);
+  --je-margin-below-toolbar: calc(var(--je-scale) * 15px);
+  --je-lilac: #ffffff;
+  --je-border-color: #e6e6e6;
+  --je-slate-blue-gradient:
+    linear-gradient(90deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 20%) 100%), #4b3187;
 }
 
-/* 1. HIDE IDE UI */
-#jp-menu-panel, #jp-top-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
-  display: none !important;
+.je-DownloadDropdownButton-menu,
+.je-KernelSwitcherDropdownButton-menu {
+  border-radius: 4px;
+  color: var(--je-slate-blue);
+  font-family: var(--je-font-family);
+  border-collapse: collapse;
+  border-color: var(--je-border-color);
 }
 
-/* 2. TOOLBAR & LOGO */
+.je-DownloadDropdownButton-menu .lm-Menu-item,
+.je-KernelSwitcherDropdownButton-menu .lm-Menu-item {
+  border-top: 1px solid var(--je-border-color);
+  cursor: pointer;
+}
+
+.je-DownloadDropdownButton-menu .lm-Menu-item:first-of-type,
+.je-KernelSwitcherDropdownButton-menu .lm-Menu-item:first-of-type {
+  border: 0;
+}
+
+.je-DropdownMenu {
+  font-size: calc(var(--je-scale) * 24px);
+  font-weight: 600;
+}
+
+.je-DropdownMenu .lm-Menu-itemLabel {
+  padding: 7px 10px;
+}
+
+.je-DropdownMenu .lm-Menu-itemSubmenuIcon,
+.je-DropdownMenu .lm-Menu-itemIcon {
+  display: none;
+}
+
+.jp-Dialog-content {
+  border: 3px solid var(--je-slate-blue);
+  border-radius: var(--je-dialog-round-corners);
+  box-shadow: 3px 3px 3px rgb(0 0 0 / 25%);
+  font-family: var(--je-font-family);
+}
+
+.jp-Dialog-body {
+  color: var(--je-slate-blue);
+  font-family: var(--je-font-family);
+  font-size: calc(var(--je-scale) * 16px);
+  line-height: 1.5;
+}
+
+.jp-Dialog-footer {
+  justify-content: center;
+}
+
+.jp-Dialog-footerButtons {
+  text-align: center;
+  cursor: pointer;
+}
+
+.jp-Dialog {
+  clip-path: rect(
+    calc(var(--je-document-padding) + var(--je-toolbar-height) + var(--je-margin-below-toolbar))
+      calc(100% - var(--je-document-padding)) calc(100% - var(--je-document-padding))
+      calc(var(--je-document-padding) + var(--je-sidebar-width)) round var(--je-round-corners)
+  );
+}
+
+.jp-Dialog-content .jp-Dialog-button {
+  background: var(--je-slate-blue-gradient) !important;
+  box-shadow: 0 1.5px 3px rgb(0 0 0 / 5%);
+  border-radius: var(--je-dialog-round-corners);
+  font-family: var(--je-font-family);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 150%;
+  cursor: pointer;
+}
+
+.jp-Dialog-header {
+  color: var(--je-slate-blue);
+  font-family: var(--je-font-family);
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+}
+
+.je-share-link {
+  background: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  word-break: break-all;
+  font-family: monospace;
+}
+
+.je-PageTitle {
+  font-weight: 600;
+  font-family: var(--je-font-family);
+  font-size: calc(var(--je-scale) * 48px);
+}
+
+.je-PageTitle-icon > svg {
+  height: calc(var(--je-scale) * 41px);
+  margin-left: calc(var(--je-scale) * 30px);
+  margin-right: calc(var(--je-scale) * 20px);
+}
+
+.jp-toastContainer {
+  z-index: var(--je-toastify-z-index);
+}
+
+.jp-InputArea-prompt-indicator {
+  left: 0;
+  line-height: 25px;
+}
+
+.jp-InputArea-prompt-indicator::before {
+  left: 0;
+  line-height: 25px;
+  top: 5px;
+}
+
+.jp-InputArea-prompt-run.je-cell-run-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%) scale(calc(var(--je-scale) * 2.5));
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+/* Don't show run button on raw cells */
+.jp-RawCell .jp-InputArea-prompt-run.je-cell-run-button {
+  display: none;
+}
+
+.jp-Cell:hover:not(.jp-RawCell) .jp-InputArea-prompt-run.je-cell-run-button,
+.jp-Cell.jp-mod-active:not(.jp-RawCell) .jp-InputArea-prompt-run.je-cell-run-button {
+  opacity: 1;
+}
+
+/* Hide all dirty state indicators */
+.jp-Cell.jp-mod-dirty .jp-Cell-inputCollapser,
+.jp-InputCollapser.jp-Cell-inputCollapser,
+.jp-OutputCollapser.jp-Cell-outputCollapser,
+.jp-Collapser-child {
+  display: none;
+}
+
+.jp-Notebook .jp-CodeCell:hover .jp-InputArea-prompt-indicator,
+.jp-Notebook .jp-CodeCell.jp-mod-active .jp-InputArea-prompt-indicator,
+.jp-Notebook .jp-CodeCell.jp-mod-selected .jp-InputArea-prompt-indicator,
+.jp-Notebook .jp-CodeCell:hover .jp-InputPrompt > .jp-InputArea-prompt-indicator,
+.jp-Notebook .jp-CodeCell.jp-mod-active .jp-InputPrompt > .jp-InputArea-prompt-indicator,
+.jp-Notebook .jp-CodeCell.jp-mod-selected .jp-InputPrompt > .jp-InputArea-prompt-indicator {
+  visibility: hidden;
+}
+
+.jp-Notebook .jp-Cell:not(.jp-mod-active) .jp-OutputPrompt {
+  visibility: hidden;
+}
+
+.jp-Notebook .jp-Cell.jp-mod-active .jp-OutputPrompt {
+  visibility: visible;
+}
+
+.jp-Cell.jp-mod-dirty::before {
+  display: none;
+}
+
+.jp-Cell.jp-mod-dirty .jp-InputArea::before {
+  display: none;
+}
+
+/* Hide the • (U+2022) character for dirty cells */
+.jp-Cell.jp-mod-dirty .jp-InputPrompt.jp-InputArea-prompt::before {
+  content: '';
+}
+
+.jp-InputArea {
+  position: relative;
+}
+
+.jp-InputArea-editor {
+  border-radius: var(--je-round-corners);
+  padding: calc(var(--je-scale) * 5px);
+}
+
+/* Ensure markdown and raw cells have a height that's
+consistent with code cells */
+.jp-MarkdownCell .jp-InputArea,
+.jp-RawCell .jp-InputArea {
+  min-height: var(--je-cell-height);
+}
+
+.jp-CodeCell .jp-Cell-inputWrapper {
+  min-height: var(--je-cell-height);
+}
+
+.jp-mod-focused .cm-placeholder {
+  /* Hide placeholder when cell is clicked */
+  visibility: hidden;
+}
+
+.cm-editor .cm-placeholder {
+  color: #828282 !important;
+  font-weight: 600;
+}
+
+.jp-MarkdownCell .jp-RenderedHTMLCommon,
+.jp-MarkdownCell .jp-InputArea-editor {
+  min-height: 32px;
+  align-items: center;
+}
+
+.jp-SideBar {
+  /* Override colors in sidebar */
+  --jp-layout-color1: #e6e6e6;
+  --jp-layout-color2: #fff;
+  --jp-border-width: 0px;
+}
+
+.jp-SideBar.lm-TabBar {
+  min-width: var(--je-sidebar-width);
+  max-width: var(--je-sidebar-width);
+}
+
+.jp-SideBar .lm-TabBar-tab:first-of-type {
+  margin-bottom: calc(var(--je-scale) * 20px);
+}
+
+.jp-SideBar .lm-TabBar-tabIcon > svg {
+  width: initial;
+  scale: var(--je-scale);
+}
+
 .jp-Toolbar {
-  background: white !important;
-  border-bottom: 2px solid var(--ck-border) !important;
-  height: 60px !important;
-  padding-left: 170px !important; 
-  position: relative !important;
-  display: flex !important;
+  --jp-ui-font-color1: var(--je-slate-blue);
+  --jp-ui-font-family: var(--je-font-family);
 }
 
-/* For the build, we leave the background-image empty. 
-   We will verify the UI works first, then add the logo back. */
-.jp-Toolbar::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 20px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  width: 130px !important; 
-  height: 40px !important;
-  background-color: transparent; 
-  background-repeat: no-repeat;
-  background-size: contain;
+.jp-ToolbarButtonComponent-label {
+  font-weight: 600;
 }
 
-/* 3. FIX ICON COLORS */
-.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg,
-.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg path {
-  fill: var(--ck-navy) !important;
+.je-KernelSwitcherButton.jp-ToolbarButtonComponent::part(content) {
+  gap: 4px;
+  flex-direction: row-reverse;
 }
 
-/* 4. NOTEBOOK STYLE */
-#jp-main-dock-panel[data-mode='single-document'] {
-  background: #f8f9fa !important;
-  padding: 0 !important;
+.jp-cell-toolbar .jp-ToolbarButtonComponent {
+  padding: calc(var(--je-scale) * 4px);
+}
+
+.jp-cell-toolbar .jp-ToolbarButtonComponent > svg {
+  min-height: 25px;
+  min-width: 21px;
+}
+
+/* Main area widget base styles */
+.jp-MainAreaWidget > .jp-Toolbar {
+  border-radius: var(--je-round-corners);
+  min-height: var(--je-toolbar-height) !important;
+}
+
+.jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent-label {
+  font-size: calc(var(--je-scale) * 24px);
+}
+
+.jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent > svg {
+  height: initial;
+  width: initial;
+  scale: var(--je-scale);
+}
+
+.jp-MainAreaWidget > :not(.jp-Toolbar) {
+  border-radius: var(--je-round-corners);
+  margin-top: var(--je-margin-below-toolbar);
+  background: white;
 }
 
 .jp-Notebook {
-  max-width: 900px !important;
-  margin: 30px auto !important;
-  padding: 40px !important;
-  background: white !important;
-  border: 1px solid var(--ck-border) !important;
+  --jp-code-font-size: calc(var(--je-scale) * 16px);
+  --jp-cell-editor-background: #f7f7f7;
+  --jp-cell-editor-border-color: #a7a9ac;
+  --jp-border-width: calc(var(--je-scale) * 1px);
 }
 
-.jp-Notebook .jp-Cell.jp-mod-active {
-  border-left: 5px solid var(--ck-blue) !important;
+/* View Only header */
+.je-ViewOnlyHeader {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  background: var(--je-slate-blue);
+}
+
+.je-ViewOnlyHeader-content {
+  color: white;
+  font-family: var(--je-font-family);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  padding: 8px 16px;
+  width: 100%;
+}
+
+.jp-MainAreaWidget > .je-ViewOnlyHeader-wrapper {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.je-ViewOnlyHeader-wrapper + .jp-Notebook {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.jp-NotebookPanel-toolbar.je-ViewOnlyNotebookToolbar {
+  border: 3px solid var(--je-slate-blue) !important;
+}
+
+#jp-main-dock-panel[data-mode='single-document'] {
+  padding: var(--je-document-padding) !important;
+  background: var(--je-lilac);
+}
+
+#jp-main-dock-panel[data-mode='single-document'] .jp-MainAreaWidget {
+  border-radius: var(--je-round-corners);
+  background: transparent;
+}
+
+.jp-ToolbarButtonComponent.je-CreateCopyButton {
+  background: var(--je-slate-blue-gradient);
+  color: white;
+  border-radius: var(--je-round-corners);
+  font-family: var(--je-font-family);
+  font-weight: 600;
+  padding: 4px 12px;
+  border: none;
+  box-shadow: 1px 2px 0 #0000006f !important;
+}
+
+.jp-ToolbarButtonComponent.je-CreateCopyButton:hover {
+  background: #2c1f5c;
+}
+
+.je-LeaveDialog-note {
+  font-family: var(--je-font-family);
+  font-size: calc(var(--je-scale) * 16px);
+  color: var(--je-slate-blue);
+  text-align: center;
+}
+
+.je-LeaveDialog.jp-Dialog-body {
+  order: 2;
+}
+
+/* we reserve space for the close button */
+@supports selector(:has(*)) {
+  .jp-Dialog-content:has(> .je-LeaveDialog.jp-Dialog-body) > .jp-Dialog-header {
+    padding-right: 28px;
+  }
+}
+
+.jp-Dialog.je-LeaveDialog-container .jp-Dialog-close-button,
+.jp-Dialog-content.je-LeaveDialog-container .jp-Dialog-close-button {
+  position: absolute;
+  top: -16px;
+  right: -8px;
+  transform: scale(calc(var(--je-scale) * 1.5));
+}
+
+.jp-Dialog .jp-Dialog-close-button .jp-Icon {
+  --jp-inverse-layout-color3: var(--je-slate-blue);
+}
+
+.je-NotFound {
+  height: 100%;
+  width: 100%;
+  background: white;
+  border-radius: var(--je-round-corners);
+}
+
+.je-NotFound-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.je-NotFound-content {
+  font-family: var(--je-font-family);
+  color: var(--je-slate-blue);
+}
+
+.je-NotFound-code {
+  opacity: 0.5;
+  margin-bottom: 12px;
+  font-size: 48px;
+  color: var(--je-slate-blue);
+}
+
+.je-NotFound-title {
+  margin: 0 0 8px;
+  font-weight: 700;
+  color: var(--je-slate-blue);
+}
+
+.je-NotFound-message {
+  margin: 0;
+  opacity: 0.8;
+  color: var(--je-slate-blue);
 }

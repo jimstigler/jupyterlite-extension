@@ -1,47 +1,39 @@
 /*
-    CourseKata Jupyter Everywhere Theme
-    Complete base.css Replacement
+    CourseKata Jupyter Lite Minimalist Theme
+    Complete Override for Stubborn Colors & Missing Logo
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 :root {
   /* CourseKata Brand Colors */
   --ck-blue: #007bff;
   --ck-navy: #002d72;
-  --ck-gray-light: #f8f9fa;
-  --ck-gray-border: #dee2e6;
-  --ck-text-main: #212529;
+  --ck-gray: #f8f9fa;
   
-  /* Layout Settings */
-  --ck-font-family: 'Inter', -apple-system, sans-serif;
-  --ck-toolbar-height: 54px;
+  /* OVERRIDING JUPYTER'S INTERNAL VARIABLES */
+  --jp-brand-color1: var(--ck-blue) !important; /* This fixes the orange 'Run' button */
+  --jp-layout-color2: #ffffff !important;
+  --jp-ui-font-family: 'Inter', sans-serif !important;
 }
 
-/* 1. STRIP THE IDE (Remove Sidebars & Complex Menus) */
-#jp-menu-panel,
-#jp-top-panel,
-#jp-bottom-panel,
-.jp-SideBar,
-.jp-StatusBar,
-.jp-Notebook-footer,
-.jp-Debugger {
+/* 1. HIDE IDE ELEMENTS */
+#jp-menu-panel, #jp-top-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
   display: none !important;
 }
 
-/* 2. BRANDED TOOLBAR */
+/* 2. THE BRANDED TOOLBAR */
 .jp-Toolbar {
   background: white !important;
-  border-bottom: 2px solid var(--ck-gray-border) !important;
-  height: var(--ck-toolbar-height) !important;
-  padding-left: 160px !important; /* Space for the SVG logo */
+  border-bottom: 2px solid #dee2e6 !important;
+  height: 54px !important;
+  padding-left: 160px !important; 
   position: relative;
   display: flex;
   align-items: center;
-  box-shadow: none !important;
 }
 
-/* Position the SVG Logo on the far left */
+/* The Logo - Using a relative path */
 .jp-Toolbar::before {
   content: "";
   position: absolute;
@@ -50,65 +42,45 @@
   transform: translateY(-50%);
   width: 120px; 
   height: 35px;
-  /* Use your logo.svg here */
-  background-image: url('logo.svg'); 
+  background-image: url('logo.svg') !important; /* Ensure logo.svg is in the same folder as this CSS */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
+  z-index: 100;
 }
 
-/* CourseKata Styled Buttons */
-.jp-ToolbarButtonComponent {
-  font-family: var(--ck-font-family) !important;
-  font-weight: 600 !important;
-  color: var(--ck-navy) !important;
-  border-radius: 4px !important;
-  margin: 0 6px !important;
-  background: transparent !important;
-  text-transform: none !important;
+/* 3. FIXING TOOLBAR ICONS (The + and Run buttons) */
+/* This forces all toolbar icons to use the CourseKata Navy color */
+.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg {
+  fill: var(--ck-navy) !important;
 }
 
-.jp-ToolbarButtonComponent:hover {
-  background-color: var(--ck-gray-light) !important;
-  color: var(--ck-blue) !important;
+.jp-Toolbar .jp-ToolbarButtonComponent:hover .jp-Icon svg {
+  fill: var(--ck-blue) !important;
 }
 
-/* 3. CENTERED "PAPER" NOTEBOOK */
+/* Specific fix for the "Run" button if it's still showing orange text/background */
+.jp-mod-styled.jp-mod-accept {
+  background-color: var(--ck-blue) !important;
+  background-image: none !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* 4. NOTEBOOK APPEARANCE */
 #jp-main-dock-panel[data-mode='single-document'] {
-  background: var(--ck-gray-light) !important;
+  background: var(--ck-gray) !important;
 }
 
 .jp-Notebook {
-  max-width: 900px; /* Standard reading width */
-  margin: 40px auto !important;
-  padding: 50px !important;
+  max-width: 900px;
+  margin: 30px auto !important;
+  padding: 40px !important;
   background: white !important;
-  border: 1px solid var(--ck-gray-border) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+  border: 1px solid #dee2e6 !important;
 }
 
-/* 4. CELL & EDITOR STYLING */
-/* Active cell gets the CourseKata blue left accent */
+/* Active cell blue indicator */
 .jp-Notebook .jp-Cell.jp-mod-active {
   border-left: 5px solid var(--ck-blue) !important;
-}
-
-/* Clean up cell editor appearance */
-.jp-InputArea-editor {
-  border: 1px solid var(--ck-gray-border) !important;
-  border-radius: 4px !important;
-}
-
-/* Prompt area (In [ ]) */
-.jp-InputPrompt, .jp-OutputPrompt {
-  font-family: 'Menlo', 'Monaco', monospace !important;
-  color: var(--ck-navy) !important;
-  font-size: 11px !important;
-  opacity: 0.6;
-}
-
-/* Overall UI font replacement */
-body, .jp-Dialog, .jp-About-content {
-  font-family: var(--ck-font-family) !important;
-  color: var(--ck-text-main);
 }

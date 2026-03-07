@@ -10,7 +10,6 @@ import {
   ISessionContext
 } from '@jupyterlab/apputils';
 import { PageConfig } from '@jupyterlab/coreutils';
-import { EverywhereIcons } from '../icons';
 import { DownloadDropdownButton } from '../ui-components/DownloadDropdownButton';
 import { Commands } from '../commands';
 import { SharingService } from '../sharing-service';
@@ -84,7 +83,7 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     toolbarRegistry: IToolbarWidgetRegistry,
     router?: ILiteRouter | null
   ) => {
-    const { commands, shell, serviceManager } = app;
+    const { commands, serviceManager } = app;
     const { contents } = serviceManager;
 
     const params = new URLSearchParams(window.location.search);

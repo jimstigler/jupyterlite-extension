@@ -1,92 +1,82 @@
 /*
-    CourseKata Jupyter Everywhere - Absolute Override
-    This version embeds the logo and forces icon colors.
+    CourseKata Jupyter Everywhere - Deep Override Version
+    Focuses on high-specificity selectors to force brand colors.
 */
 
 :root {
-  --ck-blue: #007bff;
-  --ck-navy: #002d72;
-  --ck-gray-bg: #f8f9fa;
-  --ck-border: #dee2e6;
+  /* CourseKata Brand Colors */
+  --ck-blue: #007bff !important;
+  --ck-navy: #002d72 !important;
+  --ck-gray-bg: #f8f9fa !important;
   
-  /* Force internal Jupyter brand variables */
-  --jp-brand-color0: var(--ck-navy) !important;
-  --jp-brand-color1: var(--ck-blue) !important; 
-  --jp-ui-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  /* Jupyter Core Variable Overrides */
+  --jp-brand-color1: #007bff !important; /* Forces the orange button to blue */
+  --jp-brand-color0: #002d72 !important;
+  --jp-ui-font-family: -apple-system, system-ui, sans-serif !important;
 }
 
-/* 1. HIDE ALL SIDEBARS/MENUS */
+/* 1. HIDE IDE INTERFACE */
 #jp-menu-panel, #jp-top-panel, #jp-bottom-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
   display: none !important;
 }
 
-/* 2. BRANDED TOOLBAR */
+/* 2. BRANDED TOOLBAR & LOGO */
 .jp-Toolbar {
   background: white !important;
-  border-bottom: 2px solid var(--ck-border) !important;
+  border-bottom: 2px solid #dee2e6 !important;
   height: 60px !important;
   padding-left: 170px !important; 
-  position: relative;
-  display: flex;
-  align-items: center;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
-/* LOGO OVERRIDE: Using a container that doesn't rely on external file paths */
+/* THE LOGO: Using an absolute path relative to your GitHub domain */
 .jp-Toolbar::before {
-  content: "";
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 130px; 
-  height: 40px;
-  /* I've pointed this back to your relative path, but added a fallback background color 
-     to see if the container itself is appearing. */
-  background-image: url('logo.svg') !important;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: left center;
+  content: "" !important;
+  position: absolute !important;
+  left: 20px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 130px !important; 
+  height: 40px !important;
+  background-image: url('/jupyterlite-extension/style/logo.svg') !important; 
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: left center !important;
+  z-index: 999 !important;
 }
 
-/* 3. FIXING STUBBORN ICON COLORS (The Orange & Purple) */
-/* Target the SVGs directly inside the buttons */
+/* 3. FIXING THE ORANGE/PURPLE ICONS */
+/* This targets the SVG paths directly to force the color change */
 .jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg,
-.jp-InputArea-prompt-run.je-cell-run-button .jp-Icon svg {
+.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg path,
+.jp-InputArea-prompt-run.je-cell-run-button .jp-Icon svg path {
   fill: var(--ck-navy) !important;
 }
 
-/* Fix the 'Run' icon specifically */
-[data-icon="ui-components:run"] svg, 
-[data-icon="ui-components:play"] svg {
+/* Specifically target the 'Run' icon triangle */
+[data-icon="ui-components:run"] svg path, 
+[data-icon="ui-components:play"] svg path {
   fill: var(--ck-blue) !important;
 }
 
-/* Change icon hover color to CK Blue */
-.jp-Toolbar .jp-ToolbarButtonComponent:hover .jp-Icon svg {
-  fill: var(--ck-blue) !important;
-}
-
-/* 4. NOTEBOOK "PAPER" STYLE */
+/* 4. CENTERED DOCUMENT STYLE */
 #jp-main-dock-panel[data-mode='single-document'] {
   background: var(--ck-gray-bg) !important;
+  padding: 0 !important;
 }
 
 .jp-Notebook {
-  max-width: 900px;
+  max-width: 900px !important;
   margin: 30px auto !important;
   padding: 40px !important;
   background: white !important;
-  border: 1px solid var(--ck-border) !important;
+  border: 1px solid #dee2e6 !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
 }
 
-/* Active cell blue line */
+/* Active cell blue indicator */
 .jp-Notebook .jp-Cell.jp-mod-active {
   border-left: 5px solid var(--ck-blue) !important;
-}
-
-/* Hide the bracket prompt [ ]: if you want it even cleaner */
-.jp-InputPrompt {
-  color: var(--ck-navy) !important;
-  opacity: 0.5;
 }

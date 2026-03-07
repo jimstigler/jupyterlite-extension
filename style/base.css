@@ -447,3 +447,19 @@ consistent with code cells */
   opacity: 0.8;
   color: var(--je-slate-blue);
 }
+/* Hide the entire Jupyter left sidebar */
+.jp-SideBar,
+.jp-SideBarPanel,
+.jp-SideBarStack {
+  display: none !important;
+}
+
+/* Remove the reserved sidebar width */
+.jp-LabShell {
+  --jp-left-side-panel-width: 0px;
+}
+
+/* Expand the main notebook area */
+.jp-LabShell-content {
+  margin-left: 0 !important;
+}

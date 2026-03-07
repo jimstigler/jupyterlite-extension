@@ -1,6 +1,6 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
-import { Dialog, showDialog, ReactWidget, Notification } from '@jupyterlab/apputils';
+import { Dialog, showDialog, ReactWidget, Notification, Widget } from '@jupyterlab/apputils';
 import { PageConfig } from '@jupyterlab/coreutils';
 import { INotebookContent } from '@jupyterlab/nbformat';
 import { IStateDB, StateDB } from '@jupyterlab/statedb';
@@ -253,10 +253,15 @@ commands.addCommand(Commands.downloadNotebookCommand, {
     const input = document.createElement('input');
     input.value = suggestedName;
     input.style.width = '100%';
+    input.style.boxSizing = 'border-box';
+    input.style.padding = '8px';
+
+    const body = new Widget();
+    body.node.appendChild(input);
 
     const result = await showDialog({
       title: 'Download notebook as…',
-      body: ReactWidget.create(input),
+      body,
       buttons: [Dialog.cancelButton(), Dialog.okButton({ label: 'Download' })]
     });
 

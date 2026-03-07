@@ -34,28 +34,32 @@ export function detectNotebookLanguage(notebook: Partial<INotebookContent>): 'py
  * @param {File} file - The notebook file (.ipynb) to upload.
  * @returns {Promise<void>} - A promise that resolves when the upload is complete.
  */
+ 
+export async function openNotebookContent(parsed: INotebookContent): Promise<void> {
+  const lang = detectNotebookLanguage(parsed);
+  console.log(`Detected notebook language: ${lang}`);
+  if (!lang) {
+    await showErrorMessage(
+      'Please open a valid notebook',
+      'Only Python and R notebooks are supported.'
+    );
+    console.warn('Unsupported notebook language:', parsed);
+    return;
+  }
+
+  const uploadId = UUID.uuid4();
+  const serialised = JSON.stringify(parsed);
+  localStorage.setItem(`uploaded-notebook:${uploadId}`, serialised);
+
+  window.location.href = `/jupyterlite-extension/lab/index.html?uploaded-notebook=${uploadId}`;
+} 
+ 
 export async function handleNotebookUpload(file: File): Promise<void> {
   try {
     const content = await file.text();
     const parsed = JSON.parse(content) as INotebookContent;
 
-    const lang = detectNotebookLanguage(parsed);
-    console.log(`Detected notebook language: ${lang}`);
-    if (!lang) {
-      await showErrorMessage(
-        'Please upload a valid notebook',
-        'Only Python and R notebooks are supported.'
-      );
-      console.warn('Unsupported notebook language:', parsed);
-      return;
-    }
-
-    const uploadId = UUID.uuid4();
-    const serialised = JSON.stringify(parsed);
-    localStorage.setItem(`uploaded-notebook:${uploadId}`, serialised);
-
-    // We can now redirect to JupyterLite with this notebook.
-    window.location.href = `/jupyterlite-extension/lab/index.html?uploaded-notebook=${uploadId}`;
+await openNotebookContent(parsed);
   } catch (err) {
     if (err instanceof DOMException && err.name === 'QuotaExceededError') {
       const result = await showDialog({

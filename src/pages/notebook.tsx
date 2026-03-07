@@ -284,7 +284,7 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
   'coursekataLogo',
   () =>
     new ToolbarButton({
-      label: '',
+      label: 'CourseKata',
       tooltip: 'CourseKata',
       onClick: () => {
         window.open('https://coursekata.org', '_blank');

@@ -448,14 +448,28 @@ consistent with code cells */
   color: var(--je-slate-blue);
 }
 .ck-logo-button {
-  background: url('./icons/coursekata-logo.svg') no-repeat center;
-  background-size: contain;
+  min-width: 42px !important;
+  width: 42px !important;
+  height: 28px !important;
+  margin-right: 8px !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.ck-logo-button::before {
+  content: '';
+  display: block;
   width: 42px;
   height: 28px;
-  margin-right: 8px;
-  border: none;
+  background: url('./icons/coursekata-logo.svg') no-repeat center;
+  background-size: contain;
 }
 
 .ck-logo-button svg {
-  display: none;
+  display: none !important;
+}
+
+.ck-logo-button .jp-ToolbarButtonComponent-label {
+  display: none !important;
 }

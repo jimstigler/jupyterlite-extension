@@ -10,8 +10,6 @@ import {
   ISessionContext
 } from '@jupyterlab/apputils';
 import { PageConfig } from '@jupyterlab/coreutils';
-
-import { SidebarIcon } from '../ui-components/SidebarIcon';
 import { EverywhereIcons } from '../icons';
 import { DownloadDropdownButton } from '../ui-components/DownloadDropdownButton';
 import { Commands } from '../commands';
@@ -280,38 +278,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       panel.sessionContext.kernelChanged.connect(patchPyodideHttp);
       await patchPyodideHttp(panel.sessionContext);
     });
-
-    const sidebarItem = new SidebarIcon({
-      label: 'Notebook',
-      icon: EverywhereIcons.notebook,
-      pathName: `${(router?.base || '').replace(/\/$/, '')}/lab/index.html`,
-      execute: () => {
-        if (readonlyTracker.currentWidget) {
-          const id = readonlyTracker.currentWidget.id;
-          shell.activateById(id);
-          return SidebarIcon.delegateNavigation;
-        }
-        if (tracker.currentWidget) {
-          const id = tracker.currentWidget.id;
-          shell.activateById(id);
-          return SidebarIcon.delegateNavigation;
-        }
-
-        void (async () => {
-          await app.commands.execute('notebook:create-new', { kernelName: 'python' });
-          if (tracker.currentWidget) {
-            shell.activateById(tracker.currentWidget.id);
-          }
-        })();
-        return SidebarIcon.delegateNavigation;
-      }
-    });
-    shell.add(sidebarItem, 'left', { rank: 100 });
-
-    if (!onFilesIntent) {
-      app.shell.activateById(sidebarItem.id);
-      app.restored.then(() => app.shell.activateById(sidebarItem.id));
-    }
 
     for (const toolbarName of ['Notebook', 'ViewOnlyNotebook']) {
       toolbarRegistry.addFactory(

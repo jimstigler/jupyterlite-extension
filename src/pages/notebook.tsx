@@ -1,4 +1,5 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
+import { handleNotebookUpload } from '../upload';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
@@ -314,6 +315,28 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
             className: 'je-CreateCopyButton',
             onClick: () => {
               void commands.execute(Commands.createCopyNotebookCommand);
+            }
+          })
+      );
+        toolbarRegistry.addFactory(
+        toolbarName,
+        'upload',
+        () =>
+          new ToolbarButton({
+            label: 'Upload',
+            tooltip: 'Upload a notebook',
+            onClick: () => {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.ipynb,application/json';
+              input.onchange = async () => {
+                const file = input.files?.[0];
+                if (!file) {
+                  return;
+                }
+                await handleNotebookUpload(file);
+              };
+              input.click();
             }
           })
       );

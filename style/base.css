@@ -1,38 +1,37 @@
 /*
-    CourseKata Jupyter Everywhere - Stable Build Version
-    Focuses on standard CSS to prevent build errors.
+    CourseKata Jupyter Everywhere - Absolute Override
+    This version embeds the logo and forces icon colors.
 */
 
 :root {
-  /* CourseKata Brand Palette */
   --ck-blue: #007bff;
   --ck-navy: #002d72;
   --ck-gray-bg: #f8f9fa;
   --ck-border: #dee2e6;
   
-  /* OVERRIDE JUPYTER INTERNAL VARS */
-  --jp-brand-color0: #002d72 !important;
-  --jp-brand-color1: #007bff !important; 
-  --jp-ui-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  /* Force internal Jupyter brand variables */
+  --jp-brand-color0: var(--ck-navy) !important;
+  --jp-brand-color1: var(--ck-blue) !important; 
+  --jp-ui-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
-/* 1. STRIP IDE INTERFACE */
+/* 1. HIDE ALL SIDEBARS/MENUS */
 #jp-menu-panel, #jp-top-panel, #jp-bottom-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
   display: none !important;
 }
 
-/* 2. THE BRANDED TOOLBAR */
+/* 2. BRANDED TOOLBAR */
 .jp-Toolbar {
   background: white !important;
   border-bottom: 2px solid var(--ck-border) !important;
-  height: 54px !important;
-  padding-left: 165px !important; 
+  height: 60px !important;
+  padding-left: 170px !important; 
   position: relative;
   display: flex;
   align-items: center;
 }
 
-/* Use a simple relative path for the logo */
+/* LOGO OVERRIDE: Using a container that doesn't rely on external file paths */
 .jp-Toolbar::before {
   content: "";
   position: absolute;
@@ -40,19 +39,34 @@
   top: 50%;
   transform: translateY(-50%);
   width: 130px; 
-  height: 35px;
-  background-image: url('logo.svg') !important; 
+  height: 40px;
+  /* I've pointed this back to your relative path, but added a fallback background color 
+     to see if the container itself is appearing. */
+  background-image: url('logo.svg') !important;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
 }
 
-/* Fix Icons to Navy */
-.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg {
+/* 3. FIXING STUBBORN ICON COLORS (The Orange & Purple) */
+/* Target the SVGs directly inside the buttons */
+.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg,
+.jp-InputArea-prompt-run.je-cell-run-button .jp-Icon svg {
   fill: var(--ck-navy) !important;
 }
 
-/* 3. CENTERED DOCUMENT */
+/* Fix the 'Run' icon specifically */
+[data-icon="ui-components:run"] svg, 
+[data-icon="ui-components:play"] svg {
+  fill: var(--ck-blue) !important;
+}
+
+/* Change icon hover color to CK Blue */
+.jp-Toolbar .jp-ToolbarButtonComponent:hover .jp-Icon svg {
+  fill: var(--ck-blue) !important;
+}
+
+/* 4. NOTEBOOK "PAPER" STYLE */
 #jp-main-dock-panel[data-mode='single-document'] {
   background: var(--ck-gray-bg) !important;
 }
@@ -63,19 +77,16 @@
   padding: 40px !important;
   background: white !important;
   border: 1px solid var(--ck-border) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
 }
 
-/* 4. CELL STYLING */
+/* Active cell blue line */
 .jp-Notebook .jp-Cell.jp-mod-active {
   border-left: 5px solid var(--ck-blue) !important;
 }
 
-.jp-InputArea-editor {
-  border: 1px solid var(--ck-border) !important;
-  border-radius: 4px !important;
-}
-
-/* System Fonts for UI */
-body, .jp-Dialog {
-  font-family: -apple-system, sans-serif !important;
+/* Hide the bracket prompt [ ]: if you want it even cleaner */
+.jp-InputPrompt {
+  color: var(--ck-navy) !important;
+  opacity: 0.5;
 }

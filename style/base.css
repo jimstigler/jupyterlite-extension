@@ -487,3 +487,26 @@ consistent with code cells */
 .jp-InputArea-prompt-run.je-cell-run-button:hover circle {
   fill: #e24f6e !important;
 }
+/* Run button: smaller and CourseKata red */
+.jp-InputArea-prompt-run.je-cell-run-button {
+  transform: translateY(-50%) scale(1.15) !important;
+  opacity: 1;
+  color: #fe5b7d !important;
+}
+
+.jp-InputArea-prompt-run.je-cell-run-button svg,
+.jp-InputArea-prompt-run.je-cell-run-button svg *,
+.jp-InputArea-prompt-run.je-cell-run-button .jp-Icon,
+.jp-InputArea-prompt-run.je-cell-run-button .jp-Icon * {
+  fill: #fe5b7d !important;
+  stroke: #fe5b7d !important;
+}
+
+.jp-InputArea-prompt-run.je-cell-run-button:hover,
+.jp-InputArea-prompt-run.je-cell-run-button:hover svg,
+.jp-InputArea-prompt-run.je-cell-run-button:hover svg *,
+.jp-InputArea-prompt-run.je-cell-run-button:hover .jp-Icon,
+.jp-InputArea-prompt-run.je-cell-run-button:hover .jp-Icon * {
+  fill: #e24f6e !important;
+  stroke: #e24f6e !important;
+}

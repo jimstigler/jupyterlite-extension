@@ -6,7 +6,6 @@ import { PageConfig } from '@jupyterlab/coreutils';
 import { INotebookContent } from '@jupyterlab/nbformat';
 import { IStateDB, StateDB } from '@jupyterlab/statedb';
 
-import { customSidebar } from './sidebar';
 import { SharingService } from './sharing-service';
 
 import { createSuccessDialog, createErrorDialog } from './ui-components/share-dialog';
@@ -641,7 +640,6 @@ export default [
   files,
   routesPlugin,
   // competitions,
-  customSidebar,
   helpPlugin,
   singleDocumentMode,
   placeholderPlugin,

@@ -1,11 +1,16 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { ILiteRouter } from '@jupyterlite/application';
-import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
+import {
+  Dialog,
+  showDialog,
+  ToolbarButton,
+  IToolbarWidgetRegistry,
+  ISessionContext
+} from '@jupyterlab/apputils';
 import { SidebarIcon } from '../ui-components/SidebarIcon';
 import { EverywhereIcons } from '../icons';
-import { ToolbarButton, IToolbarWidgetRegistry, ISessionContext } from '@jupyterlab/apputils';
 import { PageConfig } from '@jupyterlab/coreutils';
 import { DownloadDropdownButton } from '../ui-components/DownloadDropdownButton';
 import { Commands } from '../commands';
@@ -145,6 +150,10 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           content,
           format: 'json',
           type: 'notebook',
+          // Even though we have a custom view-only factory, we still
+          // want to indicate that notebook is read-only to avoid
+          // error on Ctrl + S and instead get a nice notification that
+          // the notebook cannot be saved unless using save-as.
           writable: false
         });
 
@@ -201,6 +210,7 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     const openUploadedNotebook = async (id: string): Promise<void> => {
       try {
         const raw = localStorage.getItem(`uploaded-notebook:${id}`);
+        // Should not happen
         if (!raw) {
           console.warn(`No uploaded notebook found for ID: ${id}`);
           await createNewNotebook();
@@ -283,7 +293,8 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
 
     tracker.widgetAdded.connect(async (_, panel) => {
       await panel.sessionContext.ready;
-      // Remove kernel URL param after notebook kernel is ready
+      // Remove kernel URL param after notebook kernel is ready, as
+      // we don't want it to linger and confuse users.
       const url = new URL(window.location.href);
       if (url.searchParams.has('kernel')) {
         url.searchParams.delete('kernel');
@@ -328,72 +339,56 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       app.restored.then(() => app.shell.activateById(sidebarItem.id));
     }
 
-    for (const toolbarName of ['Notebook', 'ViewOnlyNotebook']) {
-      toolbarRegistry.addFactory(
-        toolbarName,
-        'createCopy',
-        () =>
-          new ToolbarButton({
-            label: 'Create Copy',
-            tooltip: 'Create an editable copy of this notebook',
-            className: 'je-CreateCopyButton',
-            onClick: () => {
-              void commands.execute(Commands.createCopyNotebookCommand);
+    toolbarRegistry.addFactory(
+      'Notebook',
+      'createCopy',
+      () =>
+        new ToolbarButton({
+          label: 'Open',
+          tooltip: 'Open a notebook from file or URL',
+          onClick: async () => {
+            const result = await showDialog({
+              title: 'Open Notebook',
+              body: 'Choose how you would like to open a notebook:',
+              buttons: [
+                Dialog.cancelButton(),
+                Dialog.okButton({ label: 'Open from File', accept: true, actions: ['file'] }),
+                Dialog.warnButton({ label: 'Open from URL', actions: ['url'] })
+              ]
+            });
+
+            if (result.button.actions.includes('file')) {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.ipynb,application/json';
+              input.onchange = async () => {
+                const file = input.files?.[0];
+                if (!file) {
+                  return;
+                }
+                await handleNotebookUpload(file);
+              };
+              input.click();
             }
-          })
-      );
 
-toolbarRegistry.addFactory(
-  toolbarName,
-  'upload',
-  () =>
-    new ToolbarButton({
-      label: 'Open',
-      tooltip: 'Open a notebook from file or URL',
-      onClick: async () => {
-        const result = await showDialog({
-          title: 'Open Notebook',
-          body: 'Choose how you would like to open a notebook:',
-          buttons: [
-            Dialog.cancelButton(),
-            Dialog.okButton({ label: 'Open from File', accept: true, actions: ['file'] }),
-            Dialog.warnButton({ label: 'Open from URL', actions: ['url'] })
-          ]
-        });
-
-        if (result.button.actions.includes('file')) {
-          const input = document.createElement('input');
-          input.type = 'file';
-          input.accept = '.ipynb,application/json';
-          input.onchange = async () => {
-            const file = input.files?.[0];
-            if (!file) {
-              return;
+            if (result.button.actions.includes('url')) {
+              await openNotebookFromURL();
             }
-            await handleNotebookUpload(file);
-          };
-          input.click();
-        }
+          }
+        })
+    );
 
-        if (result.button.actions.includes('url')) {
-          await openNotebookFromURL();
-        }
-      }
-    })
-);
+    toolbarRegistry.addFactory(
+      'Notebook',
+      'downloadDropdown',
+      () => new DownloadDropdownButton(commands)
+    );
 
-      toolbarRegistry.addFactory(
-        toolbarName,
-        'downloadDropdown',
-        () => new DownloadDropdownButton(commands)
-      );
-
-      toolbarRegistry.addFactory(
-        'Notebook',
-        'jeKernelSwitcher',
-        () => new KernelSwitcherDropdownButton(commands, tracker)
-      );
-    }
+    toolbarRegistry.addFactory(
+      'Notebook',
+      'jeKernelSwitcher',
+      () => new KernelSwitcherDropdownButton(commands, tracker)
+    );
 
     // Canonicalise the URL if we are directly at /lab/.
     void app.restored.then(() => {
@@ -412,6 +407,7 @@ toolbarRegistry.addFactory(
           const base = (router?.base || '').replace(/\/$/, '');
           const canonical = new URL(`${base}/lab/index.html`, window.location.origin);
           canonical.hash = after.hash;
+          // Keep any other non-tab params off; Notebook page doesn't need them
           if (
             after.pathname + after.search + after.hash !==
             canonical.pathname + canonical.search + canonical.hash

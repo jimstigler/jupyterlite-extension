@@ -447,29 +447,24 @@ consistent with code cells */
   opacity: 0.8;
   color: var(--je-slate-blue);
 }
-.ck-logo-button {
-  min-width: 42px !important;
-  width: 42px !important;
-  height: 28px !important;
-  margin-right: 8px !important;
-  border: none !important;
-  background: transparent !important;
-  padding: 0 !important;
+
+/* ------------------------------------------------------------------ */
+/* CourseKata logo at far left of toolbar (not a button)              */
+/* ------------------------------------------------------------------ */
+
+.jp-NotebookPanel-toolbar {
+  display: flex;
+  align-items: center;
 }
 
-.ck-logo-button::before {
+.jp-NotebookPanel-toolbar::before {
   content: '';
-  display: block;
-  width: 42px;
-  height: 28px;
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  margin-right: 18px;
+  margin-left: 6px;
   background: url('./icons/coursekata-logo.svg') no-repeat center;
   background-size: contain;
-}
-
-.ck-logo-button svg {
-  display: none !important;
-}
-
-.ck-logo-button .jp-ToolbarButtonComponent-label {
-  display: none !important;
+  flex: 0 0 34px;
 }

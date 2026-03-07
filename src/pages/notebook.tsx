@@ -376,7 +376,7 @@ toolbarRegistry.addFactory(
   'openFromURL',
   () =>
     new ToolbarButton({
-      label: 'Open URL',
+      label: 'OPEN URL TEST',
       tooltip: 'Open notebook from URL',
       onClick: () => {
         void openNotebookFromURL();

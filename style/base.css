@@ -26,10 +26,10 @@
   --je-cell-height: 40px;
   --je-toastify-z-index: calc(var(--toastify-z-index) + 2);
   --je-document-padding: calc(var(--je-scale) * 51px);
-  --je-sidebar-width: calc(var(--je-scale) * 110px);
+  --je-sidebar-width: 0px;
   --je-toolbar-height: calc(var(--je-scale) * 67px);
   --je-margin-below-toolbar: calc(var(--je-scale) * 15px);
-  --je-lilac: #d8b8dc;
+  --je-lilac: #ffffff;
   --je-border-color: #e6e6e6;
   --je-slate-blue-gradient:
     linear-gradient(90deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 20%) 100%), #4b3187;

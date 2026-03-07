@@ -1,45 +1,114 @@
-/* 1. Restore the traditional background and remove the 'floating' document padding */
-#jp-main-dock-panel[data-mode='single-document'] {
-  padding: 0 !important;
-  background: #eeeeee !important; /* Classic Jupyter grey background */
+/*
+    CourseKata Jupyter Everywhere Theme
+    Complete base.css Replacement
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+  /* CourseKata Brand Colors */
+  --ck-blue: #007bff;
+  --ck-navy: #002d72;
+  --ck-gray-light: #f8f9fa;
+  --ck-gray-border: #dee2e6;
+  --ck-text-main: #212529;
+  
+  /* Layout Settings */
+  --ck-font-family: 'Inter', -apple-system, sans-serif;
+  --ck-toolbar-height: 54px;
 }
 
-/* 2. Hide the Sidebar and Top Bar completely for a cleaner look */
-.jp-SideBar, 
-#jp-top-panel, 
+/* 1. STRIP THE IDE (Remove Sidebars & Complex Menus) */
 #jp-menu-panel,
-.jp-Notebook-footer {
+#jp-top-panel,
+#jp-bottom-panel,
+.jp-SideBar,
+.jp-StatusBar,
+.jp-Notebook-footer,
+.jp-Debugger {
   display: none !important;
 }
 
-/* 3. Style the Notebook to look like a centered paper document */
-.jp-Notebook {
-  max-width: 1000px;
-  margin: 20px auto !important;
-  padding: 40px !important;
-  background: white !important;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border: 1px solid #ddd;
-}
-
-/* 4. Simplify the Cell Prompts (the [ ]: area) */
-.jp-InputPrompt, .jp-OutputPrompt {
-  font-family: monospace;
-  font-size: 12px;
-  color: #303f9f; /* Traditional blue for prompts */
-}
-
-/* 5. Clean up the Toolbar */
+/* 2. BRANDED TOOLBAR */
 .jp-Toolbar {
-  background: #f5f5f5 !important;
-  border-bottom: 1px solid #ddd !important;
+  background: white !important;
+  border-bottom: 2px solid var(--ck-gray-border) !important;
+  height: var(--ck-toolbar-height) !important;
+  padding-left: 160px !important; /* Space for the SVG logo */
+  position: relative;
+  display: flex;
+  align-items: center;
   box-shadow: none !important;
-  min-height: 35px !important;
 }
 
-/* 6. Remove those custom rounded corners from your previous 'je' style */
-.jp-InputArea-editor, 
-.jp-MainAreaWidget,
-.jp-Dialog-content {
-  border-radius: 0px !important; 
+/* Position the SVG Logo on the far left */
+.jp-Toolbar::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 120px; 
+  height: 35px;
+  /* Use your logo.svg here */
+  background-image: url('logo.svg'); 
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left center;
+}
+
+/* CourseKata Styled Buttons */
+.jp-ToolbarButtonComponent {
+  font-family: var(--ck-font-family) !important;
+  font-weight: 600 !important;
+  color: var(--ck-navy) !important;
+  border-radius: 4px !important;
+  margin: 0 6px !important;
+  background: transparent !important;
+  text-transform: none !important;
+}
+
+.jp-ToolbarButtonComponent:hover {
+  background-color: var(--ck-gray-light) !important;
+  color: var(--ck-blue) !important;
+}
+
+/* 3. CENTERED "PAPER" NOTEBOOK */
+#jp-main-dock-panel[data-mode='single-document'] {
+  background: var(--ck-gray-light) !important;
+}
+
+.jp-Notebook {
+  max-width: 900px; /* Standard reading width */
+  margin: 40px auto !important;
+  padding: 50px !important;
+  background: white !important;
+  border: 1px solid var(--ck-gray-border) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+}
+
+/* 4. CELL & EDITOR STYLING */
+/* Active cell gets the CourseKata blue left accent */
+.jp-Notebook .jp-Cell.jp-mod-active {
+  border-left: 5px solid var(--ck-blue) !important;
+}
+
+/* Clean up cell editor appearance */
+.jp-InputArea-editor {
+  border: 1px solid var(--ck-gray-border) !important;
+  border-radius: 4px !important;
+}
+
+/* Prompt area (In [ ]) */
+.jp-InputPrompt, .jp-OutputPrompt {
+  font-family: 'Menlo', 'Monaco', monospace !important;
+  color: var(--ck-navy) !important;
+  font-size: 11px !important;
+  opacity: 0.6;
+}
+
+/* Overall UI font replacement */
+body, .jp-Dialog, .jp-About-content {
+  font-family: var(--ck-font-family) !important;
+  color: var(--ck-text-main);
 }

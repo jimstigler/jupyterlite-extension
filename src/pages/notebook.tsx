@@ -2,10 +2,17 @@ import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application'
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
+import {
+  Dialog,
+  showDialog,
+  ToolbarButton,
+  IToolbarWidgetRegistry,
+  ISessionContext
+} from '@jupyterlab/apputils';
+import { PageConfig } from '@jupyterlab/coreutils';
+
 import { SidebarIcon } from '../ui-components/SidebarIcon';
 import { EverywhereIcons } from '../icons';
-import { ToolbarButton, IToolbarWidgetRegistry, ISessionContext } from '@jupyterlab/apputils';
-import { PageConfig } from '@jupyterlab/coreutils';
 import { DownloadDropdownButton } from '../ui-components/DownloadDropdownButton';
 import { Commands } from '../commands';
 import { SharingService } from '../sharing-service';
@@ -19,8 +26,6 @@ import { handleNotebookUpload, openNotebookContent } from '../upload';
  * only support Python and R notebooks, so this function maps them
  * to 'python' and 'xr' respectively. If the language is not recognized,
  * it defaults to 'python' (Pyodide).
- * @param content - The notebook content to map the language to a kernel name.
- * @returns - The kernel name as a string, either 'python' for Python or 'xr' for R.
  */
 function mapLanguageToKernel(content: INotebookContent): string {
   const rawLang =
@@ -119,7 +124,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
 
         const { content }: { content: INotebookContent } = notebookResponse;
 
-        // We make all cells read-only by setting editable: false.
         if (content.cells) {
           content.cells.forEach(cell => {
             cell.metadata = {
@@ -152,8 +156,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           factory: VIEW_ONLY_NOTEBOOK_FACTORY
         });
 
-        // Remove kernel param from URL, as we no longer need it on
-        // a view-only notebook.
         const url = new URL(window.location.href);
         url.searchParams.delete('kernel');
         window.history.replaceState({}, '', url.toString());
@@ -163,16 +165,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
         console.error('Failed to load shared notebook:', error);
 
         const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        const errorStack = error instanceof Error ? error.stack : undefined;
-
-        console.error('Error details:', {
-          message: errorMessage,
-          stack: errorStack,
-          notebookId: id,
-          errorType: typeof error,
-          errorConstructor: error?.constructor?.name
-        });
-
         alert(`Failed to load shared notebook "${id}": ${errorMessage}`);
         await createNewNotebook();
       }
@@ -223,8 +215,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
         });
         await commands.execute('docmanager:open', { path: filename });
 
-        // Once we have the notebook in the editor, it is now safe to drop
-        // the uploaded notebook ID from the URL and the temporary storage.
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete('uploaded-notebook');
         window.history.replaceState({}, '', currentUrl.toString());
@@ -249,7 +239,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       try {
         let fetchUrl = url.trim();
 
-        // Convert normal GitHub blob URLs to raw.githubusercontent URLs
         if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
           fetchUrl = fetchUrl
             .replace('https://github.com/', 'https://raw.githubusercontent.com/')
@@ -270,8 +259,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       }
     };
 
-    // If a notebook ID is provided in the URL (whether shared or uploaded),
-    // load it; otherwise, create a new notebook
     if (notebookId) {
       void loadSharedNotebook(notebookId);
     } else if (uploadedNotebookId) {
@@ -282,14 +269,14 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
 
     tracker.widgetAdded.connect(async (_, panel) => {
       await panel.sessionContext.ready;
-      // Remove kernel URL param after notebook kernel is ready
+
       const url = new URL(window.location.href);
       if (url.searchParams.has('kernel')) {
         url.searchParams.delete('kernel');
         window.history.replaceState({}, '', url.toString());
         console.log('Removed kernel param from URL after kernel init.');
       }
-      // for Python notebooks, inject code enabling URL access
+
       panel.sessionContext.kernelChanged.connect(patchPyodideHttp);
       await patchPyodideHttp(panel.sessionContext);
     });
@@ -310,7 +297,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           return SidebarIcon.delegateNavigation;
         }
 
-        // If we don't have a notebook yet (likely we started on /lab/files/) -> create one now.
         void (async () => {
           await app.commands.execute('notebook:create-new', { kernelName: 'python' });
           if (tracker.currentWidget) {
@@ -349,34 +335,35 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           new ToolbarButton({
             label: 'Open',
             tooltip: 'Open a notebook from a file or URL',
-            onClick: () => {
-              const choice = window.prompt(
-                'Type "file" to open a local notebook, or "url" to open a notebook from a URL:',
-                'file'
-              );
+            onClick: async () => {
+              const result = await showDialog({
+                title: 'Open Notebook',
+                body: 'Choose how you would like to open a notebook:',
+                buttons: [
+                  Dialog.cancelButton(),
+                  Dialog.okButton({ label: 'Open from File' }),
+                  Dialog.warnButton({ label: 'Open from URL' })
+                ]
+              });
 
-              if (!choice) {
+              if (result.button.label === 'Open from File') {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.ipynb,application/json';
+                input.onchange = async () => {
+                  const file = input.files?.[0];
+                  if (!file) {
+                    return;
+                  }
+                  await handleNotebookUpload(file);
+                };
+                input.click();
                 return;
               }
 
-              const mode = choice.trim().toLowerCase();
-
-              if (mode === 'url') {
-                void openNotebookFromURL();
-                return;
+              if (result.button.label === 'Open from URL') {
+                await openNotebookFromURL();
               }
-
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = '.ipynb,application/json';
-              input.onchange = async () => {
-                const file = input.files?.[0];
-                if (!file) {
-                  return;
-                }
-                await handleNotebookUpload(file);
-              };
-              input.click();
             }
           })
       );
@@ -394,7 +381,6 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       );
     }
 
-    // Canonicalise the URL if we are directly at /lab/.
     void app.restored.then(() => {
       const url = new URL(window.location.href);
       if (/\/lab\/$/.test(url.pathname)) {

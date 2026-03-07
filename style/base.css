@@ -26,7 +26,7 @@
   --je-cell-height: 40px;
   --je-toastify-z-index: calc(var(--toastify-z-index) + 2);
   --je-document-padding: calc(var(--je-scale) * 51px);
-  --je-sidebar-width: 0px;
+  --je-sidebar-width: calc(var(--je-scale) * 110px);
   --je-toolbar-height: calc(var(--je-scale) * 67px);
   --je-margin-below-toolbar: calc(var(--je-scale) * 15px);
   --je-lilac: #ffffff;

@@ -1,37 +1,37 @@
 /*
-    CourseKata Jupyter Everywhere - Deep Override Version
-    Focuses on high-specificity selectors to force brand colors.
+    CourseKata Jupyter Everywhere - Build-Safe Version
+    Removed external imports and simplified variables to prevent build errors.
 */
 
 :root {
-  /* CourseKata Brand Colors */
-  --ck-blue: #007bff !important;
-  --ck-navy: #002d72 !important;
-  --ck-gray-bg: #f8f9fa !important;
+  /* Brand Colors */
+  --ck-blue: #007bff;
+  --ck-navy: #002d72;
+  --ck-border: #dee2e6;
   
-  /* Jupyter Core Variable Overrides */
-  --jp-brand-color1: #007bff !important; /* Forces the orange button to blue */
-  --jp-brand-color0: #002d72 !important;
+  /* Override Jupyter variables directly */
+  --jp-brand-color1: var(--ck-blue) !important;
+  --jp-brand-color0: var(--ck-navy) !important;
   --jp-ui-font-family: -apple-system, system-ui, sans-serif !important;
 }
 
-/* 1. HIDE IDE INTERFACE */
-#jp-menu-panel, #jp-top-panel, #jp-bottom-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
+/* 1. HIDE IDE UI */
+#jp-menu-panel, #jp-top-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
   display: none !important;
 }
 
-/* 2. BRANDED TOOLBAR & LOGO */
+/* 2. TOOLBAR & LOGO */
 .jp-Toolbar {
   background: white !important;
-  border-bottom: 2px solid #dee2e6 !important;
+  border-bottom: 2px solid var(--ck-border) !important;
   height: 60px !important;
   padding-left: 170px !important; 
   position: relative !important;
   display: flex !important;
-  align-items: center !important;
 }
 
-/* THE LOGO: Using an absolute path relative to your GitHub domain */
+/* For the build, we leave the background-image empty. 
+   We will verify the UI works first, then add the logo back. */
 .jp-Toolbar::before {
   content: "" !important;
   position: absolute !important;
@@ -40,30 +40,20 @@
   transform: translateY(-50%) !important;
   width: 130px !important; 
   height: 40px !important;
-  background-image: url('/jupyterlite-extension/style/logo.svg') !important; 
-  background-size: contain !important;
-  background-repeat: no-repeat !important;
-  background-position: left center !important;
-  z-index: 999 !important;
+  background-color: transparent; 
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
-/* 3. FIXING THE ORANGE/PURPLE ICONS */
-/* This targets the SVG paths directly to force the color change */
+/* 3. FIX ICON COLORS */
 .jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg,
-.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg path,
-.jp-InputArea-prompt-run.je-cell-run-button .jp-Icon svg path {
+.jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg path {
   fill: var(--ck-navy) !important;
 }
 
-/* Specifically target the 'Run' icon triangle */
-[data-icon="ui-components:run"] svg path, 
-[data-icon="ui-components:play"] svg path {
-  fill: var(--ck-blue) !important;
-}
-
-/* 4. CENTERED DOCUMENT STYLE */
+/* 4. NOTEBOOK STYLE */
 #jp-main-dock-panel[data-mode='single-document'] {
-  background: var(--ck-gray-bg) !important;
+  background: #f8f9fa !important;
   padding: 0 !important;
 }
 
@@ -72,11 +62,9 @@
   margin: 30px auto !important;
   padding: 40px !important;
   background: white !important;
-  border: 1px solid #dee2e6 !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+  border: 1px solid var(--ck-border) !important;
 }
 
-/* Active cell blue indicator */
 .jp-Notebook .jp-Cell.jp-mod-active {
   border-left: 5px solid var(--ck-blue) !important;
 }

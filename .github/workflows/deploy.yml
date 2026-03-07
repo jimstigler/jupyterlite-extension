@@ -44,6 +44,10 @@ jobs:
       - name: Install JS dependencies
         run: jlpm install
 
+      - name: Inject GitHub Pages config
+        working-directory: ./lite
+        run: bash ../.github/inject-gh-pages-config.sh
+
       - name: Build site
         run: jlpm build:all
 

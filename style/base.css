@@ -449,7 +449,7 @@ consistent with code cells */
 }
 
 /* ------------------------------------------------------------------ */
-/* CourseKata logo at far left of toolbar (not a button)              */
+/* CourseKata logo at far left of toolbar                             */
 /* ------------------------------------------------------------------ */
 
 .jp-NotebookPanel-toolbar {
@@ -460,11 +460,11 @@ consistent with code cells */
 .jp-NotebookPanel-toolbar::before {
   content: '';
   display: inline-block;
-  width: 34px;
-  height: 34px;
-  margin-right: 18px;
-  margin-left: 6px;
-  background: url('./icons/coursekata-logo.svg') no-repeat center;
+  width: 120px;     /* allow wide logo */
+  height: 32px;
+  margin-right: 20px;
+  margin-left: 10px;
+  background: url('./icons/coursekata-logo.svg') no-repeat center left;
   background-size: contain;
-  flex: 0 0 34px;
+  flex: 0 0 auto;
 }

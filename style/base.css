@@ -256,14 +256,8 @@ consistent with code cells */
 }
 
 .jp-SideBar.lm-TabBar {
-  min-width: 0 !important;
-  max-width: 0 !important;
-  width: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  overflow: hidden !important;
-  background: transparent !important;
+  min-width: var(--je-sidebar-width);
+  max-width: var(--je-sidebar-width);
 }
 
 .jp-SideBar .lm-TabBar-tab:first-of-type {
@@ -377,7 +371,7 @@ consistent with code cells */
   font-weight: 600;
   padding: 4px 12px;
   border: none;
-  box-shadow: 1px 2px 0 #0000006f !important; /* pretty much convinced my browser is haunted */
+  box-shadow: 1px 2px 0 #0000006f !important;
 }
 
 .jp-ToolbarButtonComponent.je-CreateCopyButton:hover {
@@ -452,20 +446,4 @@ consistent with code cells */
   margin: 0;
   opacity: 0.8;
   color: var(--je-slate-blue);
-}
-/* Hide the entire Jupyter left sidebar */
-.jp-SideBar,
-.jp-SideBarPanel,
-.jp-SideBarStack {
-  display: none !important;
-}
-
-/* Remove the reserved sidebar width */
-.jp-LabShell {
-  --jp-left-side-panel-width: 0px;
-}
-
-/* Expand the main notebook area */
-.jp-LabShell-content {
-  margin-left: 0 !important;
 }

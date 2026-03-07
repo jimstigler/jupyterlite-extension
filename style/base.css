@@ -475,27 +475,11 @@ consistent with code cells */
   background-size: contain;
   flex: 0 0 auto;
 }
-/* ------------------------------------------------------------------ */
-/* CourseKata run button adjustments                                  */
-/* ------------------------------------------------------------------ */
-
-/* Move run button out of code box and align with left column */
+/* Safer run button styling */
 .jp-InputArea-prompt-run.je-cell-run-button {
-  position: absolute;
-  left: -42px;             /* push it left of the cell content */
-  right: auto;
-  top: 50%;
-  transform: translateY(-50%) scale(0.9);
-  opacity: 1;
+  transform: translateY(-50%) scale(1.35);
 }
 
-/* Smaller button */
-.jp-InputArea-prompt-run.je-cell-run-button svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* Change button color to CourseKata red */
 .jp-InputArea-prompt-run.je-cell-run-button circle {
   fill: #fe5b7d !important;
 }

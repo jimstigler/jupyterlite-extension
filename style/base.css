@@ -11,37 +11,37 @@
 #jp-top-panel,
 .jp-LabShell[data-shell-mode='single-document'] #jp-menu-panel,
 .jp-LabShell[data-shell-mode='single-document'] #jp-top-bar {
-  /* Hide the empty menu panel widget */
   min-height: 0;
   display: none;
 }
 
 :root {
-  --je-scale: 0.85;
+  --je-scale: 0.74;
   --je-slate-blue: #412c88;
-  --je-round-corners: 12px;
-  --je-round-corners-filetiles: 6px;
+  --je-round-corners: 0px;
+  --je-round-corners-filetiles: 4px;
   --je-font-family: 'Inter', sans-serif;
-  --je-dialog-round-corners: 12px;
-  --je-cell-height: 40px;
+  --je-dialog-round-corners: 6px;
+  --je-cell-height: 34px;
   --je-toastify-z-index: calc(var(--toastify-z-index) + 2);
-  --je-document-padding: calc(var(--je-scale) * 51px);
+  --je-document-padding: calc(var(--je-scale) * 42px);
   --je-sidebar-width: calc(var(--je-scale) * 110px);
-  --je-toolbar-height: calc(var(--je-scale) * 67px);
-  --je-margin-below-toolbar: calc(var(--je-scale) * 15px);
+  --je-toolbar-height: calc(var(--je-scale) * 56px);
+  --je-margin-below-toolbar: calc(var(--je-scale) * 10px);
   --je-lilac: #ffffff;
-  --je-border-color: #e6e6e6;
+  --je-border-color: #d7d7d7;
   --je-slate-blue-gradient:
     linear-gradient(90deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 20%) 100%), #4b3187;
 }
 
 .je-DownloadDropdownButton-menu,
 .je-KernelSwitcherDropdownButton-menu {
-  border-radius: 4px;
+  border-radius: 2px;
   color: var(--je-slate-blue);
   font-family: var(--je-font-family);
   border-collapse: collapse;
-  border-color: var(--je-border-color);
+  border: 1px solid var(--je-border-color);
+  background: #fff;
 }
 
 .je-DownloadDropdownButton-menu .lm-Menu-item,
@@ -56,12 +56,12 @@
 }
 
 .je-DropdownMenu {
-  font-size: calc(var(--je-scale) * 24px);
+  font-size: calc(var(--je-scale) * 20px);
   font-weight: 600;
 }
 
 .je-DropdownMenu .lm-Menu-itemLabel {
-  padding: 7px 10px;
+  padding: 6px 10px;
 }
 
 .je-DropdownMenu .lm-Menu-itemSubmenuIcon,
@@ -70,9 +70,9 @@
 }
 
 .jp-Dialog-content {
-  border: 3px solid var(--je-slate-blue);
+  border: 1px solid var(--je-slate-blue);
   border-radius: var(--je-dialog-round-corners);
-  box-shadow: 3px 3px 3px rgb(0 0 0 / 25%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
   font-family: var(--je-font-family);
 }
 
@@ -80,7 +80,7 @@
   color: var(--je-slate-blue);
   font-family: var(--je-font-family);
   font-size: calc(var(--je-scale) * 16px);
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .jp-Dialog-footer {
@@ -96,14 +96,14 @@
   clip-path: rect(
     calc(var(--je-document-padding) + var(--je-toolbar-height) + var(--je-margin-below-toolbar))
       calc(100% - var(--je-document-padding)) calc(100% - var(--je-document-padding))
-      calc(var(--je-document-padding) + var(--je-sidebar-width)) round var(--je-round-corners)
+      calc(var(--je-document-padding) + var(--je-sidebar-width)) round var(--je-dialog-round-corners)
   );
 }
 
 .jp-Dialog-content .jp-Dialog-button {
-  background: var(--je-slate-blue-gradient) !important;
-  box-shadow: 0 1.5px 3px rgb(0 0 0 / 5%);
-  border-radius: var(--je-dialog-round-corners);
+  background: var(--je-slate-blue) !important;
+  box-shadow: none;
+  border-radius: 4px;
   font-family: var(--je-font-family);
   font-style: normal;
   font-weight: 500;
@@ -122,7 +122,7 @@
 .je-share-link {
   background: #f0f0f0;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 3px;
   margin-bottom: 20px;
   word-break: break-all;
   font-family: monospace;
@@ -131,13 +131,13 @@
 .je-PageTitle {
   font-weight: 600;
   font-family: var(--je-font-family);
-  font-size: calc(var(--je-scale) * 48px);
+  font-size: calc(var(--je-scale) * 42px);
 }
 
 .je-PageTitle-icon > svg {
-  height: calc(var(--je-scale) * 41px);
-  margin-left: calc(var(--je-scale) * 30px);
-  margin-right: calc(var(--je-scale) * 20px);
+  height: calc(var(--je-scale) * 36px);
+  margin-left: calc(var(--je-scale) * 24px);
+  margin-right: calc(var(--je-scale) * 16px);
 }
 
 .jp-toastContainer {
@@ -159,7 +159,7 @@
   position: absolute;
   right: 8px;
   top: 50%;
-  transform: translateY(-50%) scale(calc(var(--je-scale) * 2.5));
+  transform: translateY(-50%) scale(calc(var(--je-scale) * 2.1));
   opacity: 0;
   transition: opacity 0.15s ease-in-out;
 }
@@ -217,8 +217,8 @@
 }
 
 .jp-InputArea-editor {
-  border-radius: var(--je-round-corners);
-  padding: calc(var(--je-scale) * 5px);
+  border-radius: 0;
+  padding: calc(var(--je-scale) * 4px);
 }
 
 /* Ensure markdown and raw cells have a height that's
@@ -233,7 +233,6 @@ consistent with code cells */
 }
 
 .jp-mod-focused .cm-placeholder {
-  /* Hide placeholder when cell is clicked */
   visibility: hidden;
 }
 
@@ -249,7 +248,6 @@ consistent with code cells */
 }
 
 .jp-SideBar {
-  /* Override colors in sidebar */
   --jp-layout-color1: #e6e6e6;
   --jp-layout-color2: #fff;
   --jp-border-width: 0px;
@@ -284,22 +282,23 @@ consistent with code cells */
 }
 
 .jp-cell-toolbar .jp-ToolbarButtonComponent {
-  padding: calc(var(--je-scale) * 4px);
+  padding: calc(var(--je-scale) * 3px);
 }
 
 .jp-cell-toolbar .jp-ToolbarButtonComponent > svg {
-  min-height: 25px;
-  min-width: 21px;
+  min-height: 21px;
+  min-width: 18px;
 }
 
 /* Main area widget base styles */
 .jp-MainAreaWidget > .jp-Toolbar {
-  border-radius: var(--je-round-corners);
+  border-radius: 0;
   min-height: var(--je-toolbar-height) !important;
+  box-shadow: none;
 }
 
 .jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent-label {
-  font-size: calc(var(--je-scale) * 24px);
+  font-size: calc(var(--je-scale) * 21px);
 }
 
 .jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent > svg {
@@ -309,16 +308,24 @@ consistent with code cells */
 }
 
 .jp-MainAreaWidget > :not(.jp-Toolbar) {
-  border-radius: var(--je-round-corners);
+  border-radius: 0;
   margin-top: var(--je-margin-below-toolbar);
   background: white;
 }
 
 .jp-Notebook {
   --jp-code-font-size: calc(var(--je-scale) * 16px);
-  --jp-cell-editor-background: #f7f7f7;
-  --jp-cell-editor-border-color: #a7a9ac;
+  --jp-cell-editor-background: #ffffff;
+  --jp-cell-editor-border-color: #cfcfcf;
   --jp-border-width: calc(var(--je-scale) * 1px);
+}
+
+.jp-Cell,
+.jp-CodeCell .jp-Cell-inputWrapper,
+.jp-MarkdownCell .jp-InputArea,
+.jp-RawCell .jp-InputArea,
+.jp-ToolbarButtonComponent {
+  border-radius: 0 !important;
 }
 
 /* View Only header */
@@ -350,7 +357,7 @@ consistent with code cells */
 }
 
 .jp-NotebookPanel-toolbar.je-ViewOnlyNotebookToolbar {
-  border: 3px solid var(--je-slate-blue) !important;
+  border: 1px solid var(--je-slate-blue) !important;
 }
 
 #jp-main-dock-panel[data-mode='single-document'] {
@@ -359,19 +366,19 @@ consistent with code cells */
 }
 
 #jp-main-dock-panel[data-mode='single-document'] .jp-MainAreaWidget {
-  border-radius: var(--je-round-corners);
+  border-radius: 0;
   background: transparent;
 }
 
 .jp-ToolbarButtonComponent.je-CreateCopyButton {
-  background: var(--je-slate-blue-gradient);
+  background: var(--je-slate-blue);
   color: white;
-  border-radius: var(--je-round-corners);
+  border-radius: 4px;
   font-family: var(--je-font-family);
   font-weight: 600;
-  padding: 4px 12px;
+  padding: 3px 10px;
   border: none;
-  box-shadow: 1px 2px 0 #0000006f !important;
+  box-shadow: none !important;
 }
 
 .jp-ToolbarButtonComponent.je-CreateCopyButton:hover {
@@ -401,7 +408,7 @@ consistent with code cells */
   position: absolute;
   top: -16px;
   right: -8px;
-  transform: scale(calc(var(--je-scale) * 1.5));
+  transform: scale(calc(var(--je-scale) * 1.3));
 }
 
 .jp-Dialog .jp-Dialog-close-button .jp-Icon {
@@ -412,7 +419,7 @@ consistent with code cells */
   height: 100%;
   width: 100%;
   background: white;
-  border-radius: var(--je-round-corners);
+  border-radius: 0;
 }
 
 .je-NotFound-container {
@@ -460,7 +467,7 @@ consistent with code cells */
 .jp-NotebookPanel-toolbar::before {
   content: '';
   display: inline-block;
-  width: 120px;     /* allow wide logo */
+  width: 120px;
   height: 32px;
   margin-right: 20px;
   margin-left: 10px;

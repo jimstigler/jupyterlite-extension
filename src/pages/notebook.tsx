@@ -317,35 +317,13 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
             }
           })
       );
+
       toolbarRegistry.addFactory(
         toolbarName,
         'downloadDropdown',
         () => new DownloadDropdownButton(commands)
       );
 
-      toolbarRegistry.addFactory(
-        toolbarName,
-        'share',
-        () =>
-          new ToolbarButton({
-            label: 'Share',
-            icon: EverywhereIcons.link,
-            tooltip: 'Share this notebook',
-            onClick: () => {
-              void commands.execute(Commands.shareNotebookCommand);
-            }
-          })
-      );
-      toolbarRegistry.addFactory('Notebook', 'save', () => {
-        return new ToolbarButton({
-          label: '',
-          icon: EverywhereIcons.save,
-          tooltip: 'Save this notebook',
-          onClick: () => {
-            void app.commands.execute(Commands.saveAndShareNotebookCommand);
-          }
-        });
-      });
       toolbarRegistry.addFactory(
         'Notebook',
         'jeKernelSwitcher',

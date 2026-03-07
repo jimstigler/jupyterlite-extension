@@ -1,5 +1,5 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
-import { handleNotebookUpload } from '../upload';
+import { handleNotebookUpload, openNotebookContent } from '../upload';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
@@ -204,6 +204,36 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
         console.error('Failed to create new notebook:', error);
       }
     };
+    
+    const openNotebookFromURL = async (): Promise<void> => {
+      const url = window.prompt('Enter the URL of a .ipynb notebook file:');
+      if (!url) {
+        return;
+      }
+
+      try {
+        let fetchUrl = url.trim();
+
+        // Convert normal GitHub blob URLs to raw.githubusercontent URLs
+        if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
+          fetchUrl = fetchUrl
+            .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+            .replace('/blob/', '/');
+        }
+
+        const response = await fetch(fetchUrl);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
+        }
+
+        const parsed = (await response.json()) as INotebookContent;
+        await openNotebookContent(parsed);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error('Failed to open notebook from URL:', error);
+        window.alert(`Failed to open notebook from URL:\n${message}`);
+      }
+    };
 
     const openUploadedNotebook = async (id: string): Promise<void> => {
       try {
@@ -318,28 +348,41 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
             }
           })
       );
-        toolbarRegistry.addFactory(
-        toolbarName,
-        'upload',
-        () =>
-          new ToolbarButton({
-            label: 'Upload',
-            tooltip: 'Upload a notebook',
-            onClick: () => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = '.ipynb,application/json';
-              input.onchange = async () => {
-                const file = input.files?.[0];
-                if (!file) {
-                  return;
-                }
-                await handleNotebookUpload(file);
-              };
-              input.click();
-            }
-          })
-      );
+toolbarRegistry.addFactory(
+  toolbarName,
+  'upload',
+  () =>
+    new ToolbarButton({
+      label: 'Upload',
+      tooltip: 'Upload a notebook',
+      onClick: () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.ipynb,application/json';
+        input.onchange = async () => {
+          const file = input.files?.[0];
+          if (!file) {
+            return;
+          }
+          await handleNotebookUpload(file);
+        };
+        input.click();
+      }
+    })
+);
+
+toolbarRegistry.addFactory(
+  toolbarName,
+  'openFromURL',
+  () =>
+    new ToolbarButton({
+      label: 'Open URL',
+      tooltip: 'Open notebook from URL',
+      onClick: () => {
+        void openNotebookFromURL();
+      }
+    })
+);
 
       toolbarRegistry.addFactory(
         toolbarName,

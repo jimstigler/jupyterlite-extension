@@ -13,7 +13,6 @@ import { SidebarIcon } from '../ui-components/SidebarIcon';
 import { EverywhereIcons } from '../icons';
 import { PageConfig } from '@jupyterlab/coreutils';
 import { DownloadDropdownButton } from '../ui-components/DownloadDropdownButton';
-import { Commands } from '../commands';
 import { SharingService } from '../sharing-service';
 import { VIEW_ONLY_NOTEBOOK_FACTORY, IViewOnlyNotebookTracker } from '../view-only';
 import { KernelSwitcherDropdownButton } from '../ui-components/KernelSwitcherDropdownButton';

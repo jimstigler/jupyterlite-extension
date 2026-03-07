@@ -1,75 +1,91 @@
 /*
-    CourseKata Jupyter Lite Minimalist Theme
-    Complete Override for Stubborn Colors & Missing Logo
+    CourseKata Jupyter Everywhere - Minimalist Theme
+    Complete base.css Replacement
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 :root {
-  /* CourseKata Brand Colors */
+  /* CourseKata Brand Palette */
   --ck-blue: #007bff;
   --ck-navy: #002d72;
-  --ck-gray: #f8f9fa;
+  --ck-gray-bg: #f8f9fa;
+  --ck-border: #dee2e6;
   
-  /* OVERRIDING JUPYTER'S INTERNAL VARIABLES */
-  --jp-brand-color1: var(--ck-blue) !important; /* This fixes the orange 'Run' button */
-  --jp-layout-color2: #ffffff !important;
-  --jp-ui-font-family: 'Inter', sans-serif !important;
+  /* OVERRIDE JUPYTER INTERNAL VARS (Fixes Orange Buttons) */
+  --jp-brand-color0: var(--ck-navy) !important;
+  --jp-brand-color1: var(--ck-blue) !important; 
+  --jp-brand-color2: #0056b3 !important;
+  --jp-ui-font-family: 'Inter', -apple-system, sans-serif !important;
+  
+  /* Layout */
+  --ck-toolbar-height: 54px;
 }
 
-/* 1. HIDE IDE ELEMENTS */
-#jp-menu-panel, #jp-top-panel, .jp-SideBar, .jp-StatusBar, .jp-Notebook-footer {
+/* 1. STRIP IDE INTERFACE */
+#jp-menu-panel, 
+#jp-top-panel, 
+#jp-bottom-panel, 
+.jp-SideBar, 
+.jp-StatusBar, 
+.jp-Notebook-footer,
+.jp-Debugger {
   display: none !important;
 }
 
 /* 2. THE BRANDED TOOLBAR */
 .jp-Toolbar {
   background: white !important;
-  border-bottom: 2px solid #dee2e6 !important;
-  height: 54px !important;
-  padding-left: 160px !important; 
+  border-bottom: 2px solid var(--ck-border) !important;
+  height: var(--ck-toolbar-height) !important;
+  padding-left: 165px !important; /* Space for logo */
   position: relative;
   display: flex;
   align-items: center;
+  box-shadow: none !important;
 }
 
-/* The Logo - Using a relative path */
+/* Position the CourseKata Logo */
 .jp-Toolbar::before {
   content: "";
   position: absolute;
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  width: 120px; 
+  width: 130px; 
   height: 35px;
-  background-image: url('logo.svg') !important; /* Ensure logo.svg is in the same folder as this CSS */
+  /* Updated path based on your GitHub structure */
+  background-image: url('/jupyterlite-extension/style/logo.svg') !important; 
   background-size: contain;
   background-repeat: no-repeat;
   background-position: left center;
   z-index: 100;
 }
 
-/* 3. FIXING TOOLBAR ICONS (The + and Run buttons) */
-/* This forces all toolbar icons to use the CourseKata Navy color */
+/* Fix Toolbar Icons (+ sign, play button, etc) */
 .jp-Toolbar .jp-ToolbarButtonComponent .jp-Icon svg {
   fill: var(--ck-navy) !important;
+}
+
+.jp-Toolbar .jp-ToolbarButtonComponent:hover {
+  background-color: var(--ck-gray-bg) !important;
 }
 
 .jp-Toolbar .jp-ToolbarButtonComponent:hover .jp-Icon svg {
   fill: var(--ck-blue) !important;
 }
 
-/* Specific fix for the "Run" button if it's still showing orange text/background */
+/* Specific fix for the 'Run' button (Accept state) */
 .jp-mod-styled.jp-mod-accept {
   background-color: var(--ck-blue) !important;
   background-image: none !important;
-  border: none !important;
   color: white !important;
+  border: none !important;
 }
 
-/* 4. NOTEBOOK APPEARANCE */
+/* 3. CENTERED DOCUMENT (TRADITIONAL LOOK) */
 #jp-main-dock-panel[data-mode='single-document'] {
-  background: var(--ck-gray) !important;
+  background: var(--ck-gray-bg) !important;
 }
 
 .jp-Notebook {
@@ -77,10 +93,31 @@
   margin: 30px auto !important;
   padding: 40px !important;
   background: white !important;
-  border: 1px solid #dee2e6 !important;
+  border: 1px solid var(--ck-border) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
 }
 
-/* Active cell blue indicator */
+/* 4. CELL STYLING */
+/* Left accent line for active cells */
 .jp-Notebook .jp-Cell.jp-mod-active {
   border-left: 5px solid var(--ck-blue) !important;
+}
+
+/* Clean up editor box */
+.jp-InputArea-editor {
+  border: 1px solid var(--ck-border) !important;
+  border-radius: 4px !important;
+}
+
+/* Code Prompts (In [ ]) */
+.jp-InputPrompt, .jp-OutputPrompt {
+  font-family: 'Menlo', 'Monaco', 'Courier New', monospace !important;
+  color: var(--ck-navy) !important;
+  font-size: 11px !important;
+  opacity: 0.6;
+}
+
+/* Generic UI fonts */
+body, .jp-Dialog {
+  font-family: 'Inter', sans-serif !important;
 }

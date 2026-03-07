@@ -194,17 +194,17 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const sharingService = new SharingService(apiUrl);
 
     /**
-     * Hook into notebook saves using the saveState signal to handle CKHub sharing
+     * Hook into notebook saves using the saveState signal to handle CKHub sharing.
+     * Disabled for now in this simplified version.
      */
     tracker.widgetAdded.connect((sender, widget) => {
       widget.context.saveState.connect(async (sender, saveState) => {
-        // Only trigger when save is completed (not dirty and not saving)
+        void sender;
         if (saveState === 'completed') {
           if (manuallySharing.has(widget)) {
-            // Skip auto-sync if it's a manual share.
             return;
           }
-          await handleNotebookSharing(widget, sharingService, false, () => {});
+          // Auto-share disabled in this simplified version.
         }
       });
     });
@@ -215,6 +215,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
     commands.addCommand(Commands.downloadNotebookCommand, {
       label: 'Download as a notebook',
       execute: args => {
+        void args;
+
         // Clear all sharing-specific metadata before download
         const panel = readonlyTracker.currentWidget ?? tracker.currentWidget;
 
@@ -256,6 +258,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
     commands.addCommand(Commands.downloadPDFCommand, {
       label: 'Download as PDF',
       execute: async args => {
+        void args;
+
         const panel = readonlyTracker.currentWidget ?? tracker.currentWidget;
 
         if (!panel) {
@@ -275,11 +279,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
         }
       }
     });
+
     /**
      * Add a command to restart the notebook kernel, terming it as "memory",
      * and run all cells after the restart.
      */
-
     commands.addCommand(Commands.restartMemoryAndRunAllCommand, {
       label: 'Restart Notebook Memory and Run All Cells',
       icon: EverywhereIcons.fastForward,
@@ -316,7 +320,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     let hasManuallySaved = false; // whether the user has manually saved at least once in this session
 
     /**
-     * Add custom Share notebook command
+     * Share disabled in simplified version.
      */
     const markManualSave = () => {
       hasManuallySaved = true;
@@ -325,36 +329,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
     commands.addCommand(Commands.shareNotebookCommand, {
       label: 'Share Notebook',
       execute: async () => {
-        try {
-          const notebookPanel = readonlyTracker.currentWidget
-            ? readonlyTracker.currentWidget
-            : tracker.currentWidget;
-          if (!notebookPanel) {
-            console.warn('Notebook panel not found, no notebook to share');
-            return;
-          }
-
-          // Mark this notebook as being shared manually (i.e., the user has
-          // clicked the "Share Notebook" command).
-          manuallySharing.add(notebookPanel);
-
-          // Save the notebook before we share it.
-          await notebookPanel.context.save();
-
-          await handleNotebookSharing(notebookPanel, sharingService, true, markManualSave);
-        } catch (error) {
-          console.error('Error in share command:', error);
-        }
+        console.info('Share is disabled in this version.');
       }
     });
+
     /**
-     * Add a custom Save and Share notebook command. This command
-     * is activated only on key bindings (Accel S) and is used to
-     * display the shareable link dialog after the notebook is
-     * saved manually by the user.
+     * Local-only save command.
+     * Activated on Accel+S and does not attempt to share.
      */
     commands.addCommand(Commands.saveAndShareNotebookCommand, {
-      label: 'Save and Share Notebook',
+      label: 'Save Notebook',
       execute: async () => {
         const panel = readonlyTracker.currentWidget ?? tracker.currentWidget;
         if (!panel) {
@@ -362,12 +346,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
           return;
         }
         if (panel.context.model.readOnly) {
-          console.info('Notebook is read-only, skipping save-and-share.');
+          console.info('Notebook is read-only, skipping save.');
           return;
         }
-        manuallySharing.add(panel);
+
+        hasManuallySaved = true;
         await panel.context.save();
-        await handleNotebookSharing(panel, sharingService, true, markManualSave);
       }
     });
 
@@ -594,6 +578,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
         }
       });
     });
+
+    void sharingService;
+    void showShareDialog;
+    void handleNotebookSharing;
+    void markManualSave;
   }
 };
 
@@ -602,6 +591,7 @@ const stateDBShim: JupyterFrontEndPlugin<IStateDB> = {
   autoStart: true,
   provides: IStateDB,
   activate: (app: JupyterFrontEnd) => {
+    void app;
     return new StateDB();
   }
 };

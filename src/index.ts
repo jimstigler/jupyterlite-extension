@@ -11,13 +11,11 @@ import { SharingService } from './sharing-service';
 import { createSuccessDialog, createErrorDialog } from './ui-components/share-dialog';
 
 import { exportNotebookAsPDF } from './pdf';
-import { files } from './pages/files';
 import routesPlugin from './routes';
 import notFoundPlugin from './pages/not-found';
 import { Commands } from './commands';
 // import { competitions } from './pages/competitions';
 import { notebookPlugin } from './pages/notebook';
-import { helpPlugin } from './pages/help';
 import { generateDefaultNotebookName, isNotebookEmpty } from './notebook-utils';
 import {
   IViewOnlyNotebookTracker,
@@ -637,10 +635,7 @@ export default [
   notebookFactoryPlugin,
   plugin,
   notebookPlugin,
-  files,
   routesPlugin,
-  // competitions,
-  helpPlugin,
   singleDocumentMode,
   placeholderPlugin,
   sessionDialogs,

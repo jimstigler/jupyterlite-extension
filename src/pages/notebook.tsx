@@ -279,6 +279,19 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     });
 
     for (const toolbarName of ['Notebook', 'ViewOnlyNotebook']) {
+    toolbarRegistry.addFactory(
+  toolbarName,
+  'coursekataLogo',
+  () =>
+    new ToolbarButton({
+      label: '',
+      tooltip: 'CourseKata',
+      onClick: () => {
+        window.open('https://coursekata.org', '_blank');
+      },
+      className: 'ck-logo-button'
+    })
+);
       toolbarRegistry.addFactory(
         toolbarName,
         'createCopy',

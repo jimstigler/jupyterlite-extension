@@ -447,3 +447,15 @@ consistent with code cells */
   opacity: 0.8;
   color: var(--je-slate-blue);
 }
+.ck-logo-button {
+  background: url('../icons/coursekata-logo.jpeg') no-repeat center;
+  background-size: contain;
+  width: 42px;
+  height: 28px;
+  margin-right: 8px;
+  border: none;
+}
+
+.ck-logo-button svg {
+  display: none;
+}

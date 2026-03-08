@@ -587,19 +587,63 @@ consistent with code cells */
 /* Toolbar refinements                                                */
 /* ------------------------------------------------------------------ */
 
-/* Color + icons (Code / Text) CourseKata red */
-[data-icon="ui-components:add"] {
-  fill: #fe5b7d !important;
-  stroke: #fe5b7d !important;
+/* ------------------------------------------------ */
+/* Notebook toolbar: exact sizing + plus-icon color */
+/* ------------------------------------------------ */
+
+/* Make notebook toolbar controls smaller */
+.jp-NotebookPanel-toolbar .jp-ToolbarButtonComponent-label {
+  font-size: 14px !important;
 }
 
-/* Smaller toolbar icons */
-.jp-Toolbar svg {
+.jp-NotebookPanel-toolbar .jp-Toolbar-item {
+  margin-right: 4px !important;
+}
+
+.jp-NotebookPanel-toolbar .jp-ToolbarButtonComponent {
+  padding: 1px 3px !important;
+}
+
+/* Smaller standard toolbar SVG icons */
+.jp-NotebookPanel-toolbar .jp-ToolbarButtonComponent > svg {
   width: 18px !important;
   height: 18px !important;
 }
 
-/* Smaller toolbar labels */
-.jp-ToolbarButtonComponent-label {
-  font-size: 16px !important;
+/* Slightly smaller run/interrupt/restart family */
+.jp-NotebookPanel-toolbar [data-jp-item-name='run'] svg {
+  width: 16px !important;
+  height: 21px !important;
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='interrupt'] svg,
+.jp-NotebookPanel-toolbar [data-jp-item-name='restart'] svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='restart-and-run'] svg {
+  width: 26px !important;
+  height: 18px !important;
+}
+
+/* Make only the + icons CourseKata red */
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='insert']
+  svg[data-icon='ui-components:add']
+  path,
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='insert-text']
+  svg[data-icon='ui-components:add']
+  path {
+  stroke: #fe5b7d !important;
+}
+
+/* Optional: make the download icon match a bit better too */
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  svg[data-icon='everywhere:download-caret']
+  path {
+  stroke: #fe5b7d !important;
+  fill: #fe5b7d !important;
 }

@@ -4,8 +4,6 @@ import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
 import {
-  Dialog,
-  showDialog,
   ToolbarButton,
   IToolbarWidgetRegistry,
   ISessionContext

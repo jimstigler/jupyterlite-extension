@@ -1,5 +1,5 @@
 import { CommandRegistry } from '@lumino/commands';
-import { Menu, Widget } from '@lumino/widgets';
+import { Menu } from '@lumino/widgets';
 import { ToolbarButton } from '@jupyterlab/apputils';
 
 export class OpenDropdownButton extends ToolbarButton {

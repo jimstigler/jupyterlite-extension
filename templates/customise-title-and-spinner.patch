@@ -74,7 +74,7 @@ index 962feb4..eb849c1 100644
 +        transform: translate(-50%, -50%);
 +        width: 70px;
 +        height: 70px;
-+        background-image: url('../ck-loader.svg');
++        background-image: url('logo.svg');
 +        background-size: contain;
 +        background-repeat: no-repeat;
 +        background-position: center;

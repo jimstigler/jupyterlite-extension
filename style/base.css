@@ -510,3 +510,56 @@ consistent with code cells */
   fill: #e24f6e !important;
   stroke: #e24f6e !important;
 }
+/* ------------------------------------------------------------------ */
+/* Toolbar: smaller controls, full-width band, flatter styling        */
+/* ------------------------------------------------------------------ */
+
+/* Full-width shaded toolbar band */
+.jp-MainAreaWidget > .jp-Toolbar {
+  width: 100% !important;
+  min-height: 44px !important;
+  padding: 6px 14px !important;
+  margin: 0 0 10px 0 !important;
+  border-radius: 0 !important;
+  background: #f3f3f3 !important;
+  border-top: 1px solid #e0e0e0 !important;
+  border-bottom: 1px solid #e0e0e0 !important;
+  box-shadow: none !important;
+}
+
+/* Make toolbar text and icons smaller */
+.jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent-label {
+  font-size: 18px !important;
+  font-weight: 600;
+}
+
+.jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent > svg {
+  scale: 0.62 !important;
+}
+
+/* Tighten spacing between toolbar items */
+.jp-MainAreaWidget > .jp-Toolbar .jp-Toolbar-item {
+  margin-right: 8px !important;
+}
+
+/* Remove extra rounding from toolbar buttons */
+.jp-ToolbarButtonComponent {
+  border-radius: 0 !important;
+  padding: 2px 4px !important;
+}
+
+/* Make the Open button align nicely with the logo */
+.jp-NotebookPanel-toolbar::before {
+  width: 110px;
+  height: 28px;
+  margin-right: 16px;
+  margin-left: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Make the + before Code/Text CourseKata red                         */
+/* ------------------------------------------------------------------ */
+
+.jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent-label::first-letter {
+  color: #fe5b7d;
+}

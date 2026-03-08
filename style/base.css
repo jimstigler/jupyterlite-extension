@@ -583,3 +583,23 @@ consistent with code cells */
 .jp-ToolbarButtonComponent-label span:first-child {
   color: #fe5b7d;
 }
+/* ------------------------------------------------------------------ */
+/* Toolbar refinements                                                */
+/* ------------------------------------------------------------------ */
+
+/* Color + icons (Code / Text) CourseKata red */
+[data-icon="ui-components:add"] {
+  fill: #fe5b7d !important;
+  stroke: #fe5b7d !important;
+}
+
+/* Smaller toolbar icons */
+.jp-Toolbar svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Smaller toolbar labels */
+.jp-ToolbarButtonComponent-label {
+  font-size: 16px !important;
+}

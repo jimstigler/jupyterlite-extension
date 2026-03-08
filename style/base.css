@@ -800,3 +800,10 @@ consistent with code cells */
   justify-content: center;
   height: 28px;
 }
+/* Normalize download button icon */
+jp-button[aria-label="Download"] svg {
+  width: 16px !important;
+  height: 16px !important;
+  fill: #412c88 !important;   /* CourseKata purple */
+  stroke: #412c88 !important;
+}

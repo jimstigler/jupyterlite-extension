@@ -735,6 +735,9 @@ consistent with code cells */
   height: 14px;
   background: url('./icons/download-simple.svg') no-repeat center;
   background-size: contain;
+  vertical-align: middle;
+  position: relative;
+  top: 2px;
 }
 /* Show run button only for active cell */
 .jp-InputArea-prompt-run.je-cell-run-button {

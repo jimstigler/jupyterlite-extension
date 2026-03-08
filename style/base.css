@@ -737,7 +737,7 @@ consistent with code cells */
   background-size: contain;
   vertical-align: middle;
   position: relative;
-  top: 2px;
+  top: 3px;
 }
 /* Show run button only for active cell */
 .jp-InputArea-prompt-run.je-cell-run-button {

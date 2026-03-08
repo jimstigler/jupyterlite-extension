@@ -173,8 +173,8 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     const createNewNotebook = async (): Promise<void> => {
       try {
         const params = new URLSearchParams(window.location.search);
-        const desiredKernelParam = params.get('kernel') || 'python';
-        const desiredKernel = KERNEL_URL_TO_NAME[desiredKernelParam] || 'python';
+        const desiredKernelParam = params.get('kernel') || 'r';
+        const desiredKernel = KERNEL_URL_TO_NAME[desiredKernelParam] || 'xr';
 
         await commands.execute('notebook:create-new', {
           kernelName: desiredKernel

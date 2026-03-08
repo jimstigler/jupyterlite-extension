@@ -1,4 +1,5 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
+import { OpenDropdownButton } from '../ui-components/OpenDropdownButton';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
@@ -309,40 +310,25 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
         toolbarName,
         'upload',
         () =>
-          new ToolbarButton({
-            label: 'Open',
-            tooltip: 'Open a notebook from a file or URL',
-            onClick: async () => {
-              const result = await showDialog({
-                title: 'Open Notebook',
-                body: 'Choose how you would like to open a notebook:',
-                buttons: [
-                  Dialog.cancelButton(),
-                  Dialog.okButton({ label: 'Open from File' }),
-                  Dialog.warnButton({ label: 'Open from URL' })
-                ]
-              });
-
-              if (result.button.label === 'Open from File') {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.ipynb,application/json';
-                input.onchange = async () => {
-                  const file = input.files?.[0];
-                  if (!file) {
-                    return;
-                  }
-                  await handleNotebookUpload(file);
-                };
-                input.click();
-                return;
-              }
-
-              if (result.button.label === 'Open from URL') {
-                await openNotebookFromURL();
-              }
+          new OpenDropdownButton(
+            commands,
+            () => {
+              const input = document.createElement('input');
+              input.type = 'file';
+              input.accept = '.ipynb,application/json';
+              input.onchange = async () => {
+                const file = input.files?.[0];
+                if (!file) {
+                  return;
+                }
+                await handleNotebookUpload(file);
+              };
+              input.click();
+            },
+            () => {
+              void openNotebookFromURL();
             }
-          })
+          )
       );
 
 toolbarRegistry.addFactory(

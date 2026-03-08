@@ -638,12 +638,101 @@ consistent with code cells */
   path {
   stroke: #fe5b7d !important;
 }
+/* ------------------------------------------------ */
+/* Toolbar cleanup: size, alignment, spacing        */
+/* ------------------------------------------------ */
 
-/* Optional: make the download icon match a bit better too */
+/* Keep logo left, push the whole tool cluster right */
+.jp-NotebookPanel-toolbar .jp-Toolbar-item {
+  order: 3;
+}
+
+.jp-NotebookPanel-toolbar .jp-Toolbar-spacer {
+  order: 2 !important;
+  flex: 1 1 auto !important;
+}
+
+/* Make all toolbar labels the same size */
+.jp-NotebookPanel-toolbar jp-button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+}
+
+/* Make all toolbar icons smaller */
+.jp-NotebookPanel-toolbar .jp-ToolbarButtonComponent > svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Fine-tune a few wider icons so they look balanced */
+.jp-NotebookPanel-toolbar [data-jp-item-name='run'] svg {
+  width: 14px !important;
+  height: 18px !important;
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='interrupt'] svg,
+.jp-NotebookPanel-toolbar [data-jp-item-name='restart'] svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='restart-and-run'] svg {
+  width: 22px !important;
+  height: 16px !important;
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='downloadDropdown'] svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='jeKernelSwitcher'] svg {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+/* Tighten spacing a little */
+.jp-NotebookPanel-toolbar .jp-Toolbar-item {
+  margin-right: 4px !important;
+}
+
+.jp-NotebookPanel-toolbar .jp-ToolbarButtonComponent {
+  padding: 1px 2px !important;
+}
+
+/* Keep + icons CourseKata red */
 .jp-NotebookPanel-toolbar
-  [data-jp-item-name='downloadDropdown']
-  svg[data-icon='everywhere:download-caret']
+  [data-jp-item-name='insert']
+  svg[data-icon='ui-components:add']
+  path,
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='insert-text']
+  svg[data-icon='ui-components:add']
   path {
   stroke: #fe5b7d !important;
-  fill: #fe5b7d !important;
+}
+/* Replace Download text+icon with a simple custom icon */
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  .jp-ToolbarButtonComponent-label {
+  display: none !important;
+}
+
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  .jp-ToolbarButtonComponent
+  > svg {
+  display: none !important;
+}
+
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  jp-button.jp-ToolbarButtonComponent::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: url('./icons/download-simple.svg') no-repeat center;
+  background-size: contain;
 }

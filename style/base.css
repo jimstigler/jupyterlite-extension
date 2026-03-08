@@ -731,8 +731,8 @@ consistent with code cells */
   jp-button.jp-ToolbarButtonComponent::before {
   content: '';
   display: inline-block;
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   background: url('./icons/download-simple.svg') no-repeat center;
   background-size: contain;
 }

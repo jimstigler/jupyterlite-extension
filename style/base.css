@@ -736,3 +736,11 @@ consistent with code cells */
   background: url('./icons/download-simple.svg') no-repeat center;
   background-size: contain;
 }
+/* Show run button only for active cell */
+.jp-InputArea-prompt-run.je-cell-run-button {
+  opacity: 0 !important;
+}
+
+.jp-Cell.jp-mod-active .jp-InputArea-prompt-run.je-cell-run-button {
+  opacity: 1 !important;
+}

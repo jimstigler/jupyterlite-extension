@@ -555,11 +555,31 @@ consistent with code cells */
   margin-right: 16px;
   margin-left: 2px;
 }
+/* Color the + symbol before Code and Text */
+.jp-ToolbarButtonComponent-label:has(> span) span:first-child {
+  color: #fe5b7d !important;
+}
+/* ------------------------------------------------ */
+/* Smaller toolbar controls                         */
+/* ------------------------------------------------ */
 
-/* ------------------------------------------------------------------ */
-/* Make the + before Code/Text CourseKata red                         */
-/* ------------------------------------------------------------------ */
+.jp-ToolbarButtonComponent-label {
+  font-size: 16px !important;
+}
 
-.jp-MainAreaWidget > .jp-Toolbar .jp-ToolbarButtonComponent-label::first-letter {
+.jp-ToolbarButtonComponent svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.jp-Toolbar-item {
+  margin-right: 6px !important;
+}
+
+.jp-Toolbar {
+  min-height: 42px !important;
+}
+/* Make + before Code and Text CourseKata red */
+.jp-ToolbarButtonComponent-label span:first-child {
   color: #fe5b7d;
 }

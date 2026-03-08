@@ -751,3 +751,31 @@ consistent with code cells */
   outline: none !important;
   box-shadow: none !important;
 }
+/* Remove lingering focus box on Download button */
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  jp-button::part(control) {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  jp-button:focus::part(control),
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  jp-button:focus-visible::part(control),
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  jp-button[focus-visible]::part(control) {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.jp-NotebookPanel-toolbar
+  [data-jp-item-name='downloadDropdown']
+  jp-button {
+  --focus-stroke-outer: transparent !important;
+  --focus-stroke-inner: transparent !important;
+}

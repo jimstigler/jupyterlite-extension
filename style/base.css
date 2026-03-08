@@ -779,3 +779,24 @@ consistent with code cells */
   --focus-stroke-outer: transparent !important;
   --focus-stroke-inner: transparent !important;
 }
+/* Fix size and color of download icon */
+.jp-ToolbarButton svg {
+  width: 16px;
+  height: 16px;
+  stroke: #412c88;   /* CourseKata purple used elsewhere */
+  fill: none;
+}
+/* Improve toolbar alignment and spacing */
+.jp-Toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Keep toolbar buttons vertically aligned */
+.jp-ToolbarButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+}

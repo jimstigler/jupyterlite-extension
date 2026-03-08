@@ -10,7 +10,6 @@ import {
   ISessionContext
 } from '@jupyterlab/apputils';
 import { PageConfig } from '@jupyterlab/coreutils';
-import { DownloadDropdownButton } from '../ui-components/DownloadDropdownButton';
 import { Commands } from '../commands';
 import { SharingService } from '../sharing-service';
 import { VIEW_ONLY_NOTEBOOK_FACTORY, IViewOnlyNotebookTracker } from '../view-only';
@@ -346,11 +345,18 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           })
       );
 
-      toolbarRegistry.addFactory(
-        toolbarName,
-        'downloadDropdown',
-        () => new DownloadDropdownButton(commands)
-      );
+toolbarRegistry.addFactory(
+  toolbarName,
+  'downloadDropdown',
+  () =>
+    new ToolbarButton({
+      label: 'Download',
+      tooltip: 'Download notebook',
+      onClick: () => {
+        void commands.execute(Commands.downloadNotebookCommand);
+      }
+    })
+);
 
       toolbarRegistry.addFactory(
         'Notebook',

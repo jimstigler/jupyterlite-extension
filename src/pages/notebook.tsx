@@ -265,9 +265,9 @@ const openNotebookFromURL = async (): Promise<void> => {
 };
 
 if (notebookId) {
-  ...
+  void loadSharedNotebook(notebookId);
 } else if (uploadedNotebookId) {
-  ...
+  void openUploadedNotebook(uploadedNotebookId);
 } else if (fromUrl) {
   void openNotebookFromProvidedURL(fromUrl);
 } else if (!onFilesIntent) {

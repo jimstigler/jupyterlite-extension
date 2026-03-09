@@ -810,3 +810,6 @@ jp-button[aria-label="Download"] svg {
   fill: #412c88 !important;   /* CourseKata purple */
   stroke: #412c88 !important;
 }
+.jp-NotebookPanel-toolbar [data-jp-item-name='restart-and-run'] {
+  display: none !important;
+}

@@ -293,7 +293,7 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
 );
       toolbarRegistry.addFactory(
         toolbarName,
-        'restart-and-run',
+        'run',
         () => new RunDropdownButton(commands)
       );
       toolbarRegistry.addFactory(

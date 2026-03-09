@@ -96,6 +96,7 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
 
     let notebookId = params.get('notebook');
     const uploadedNotebookId = params.get('uploaded-notebook');
+    const fromUrl = params.get('from');
 
     if (notebookId?.endsWith('.ipynb')) {
       notebookId = notebookId.slice(0, -6);
@@ -226,42 +227,52 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     /**
      * Open notebook from URL
      */
-    const openNotebookFromURL = async (): Promise<void> => {
-      const url = window.prompt('Enter the URL of a .ipynb notebook file:');
-      if (!url) {
-        return;
-      }
+     
+     const openNotebookFromProvidedURL = async (url: string): Promise<void> => {
+  try {
+    let fetchUrl = url.trim();
 
-      try {
-        let fetchUrl = url.trim();
-
-        if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
-          fetchUrl = fetchUrl
-            .replace('https://github.com/', 'https://raw.githubusercontent.com/')
-            .replace('/blob/', '/');
-        }
-
-        const response = await fetch(fetchUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
-        }
-
-        const parsed = (await response.json()) as INotebookContent;
-        await openNotebookContent(parsed);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.error('Failed to open notebook from URL:', error);
-        window.alert(`Failed to open notebook from URL:\n${message}`);
-      }
-    };
-
-    if (notebookId) {
-      void loadSharedNotebook(notebookId);
-    } else if (uploadedNotebookId) {
-      void openUploadedNotebook(uploadedNotebookId);
-    } else if (!onFilesIntent) {
-      void createNewNotebook();
+    if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
+      fetchUrl = fetchUrl
+        .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+        .replace('/blob/', '/');
     }
+
+    const response = await fetch(fetchUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
+    }
+
+    const parsed = await response.json();
+    await openNotebookContent(parsed);
+
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.delete('from');
+    window.history.replaceState({}, '', currentUrl.toString());
+  } catch (error) {
+    console.error('Failed to open notebook from URL:', error);
+    alert('Failed to open notebook from URL.');
+  }
+};
+     
+const openNotebookFromURL = async (): Promise<void> => {
+  const url = window.prompt('Enter the URL of a .ipynb notebook file:');
+  if (!url) {
+    return;
+  }
+
+  await openNotebookFromProvidedURL(url);
+};
+
+if (notebookId) {
+  ...
+} else if (uploadedNotebookId) {
+  ...
+} else if (fromUrl) {
+  void openNotebookFromProvidedURL(fromUrl);
+} else if (!onFilesIntent) {
+  void createNewNotebook();
+}
 
     tracker.widgetAdded.connect(async (_, panel) => {
       await panel.sessionContext.ready;

@@ -1,5 +1,6 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { OpenDropdownButton } from '../ui-components/OpenDropdownButton';
+import { RunDropdownButton } from '../ui-components/RunDropdownButton';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
@@ -290,6 +291,11 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
       className: 'ck-logo-button'
     })
 );
+      toolbarRegistry.addFactory(
+        toolbarName,
+        'restart-and-run',
+        () => new RunDropdownButton(commands)
+      );
       toolbarRegistry.addFactory(
         toolbarName,
         'createCopy',

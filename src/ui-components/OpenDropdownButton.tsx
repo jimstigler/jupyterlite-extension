@@ -8,12 +8,14 @@ export class OpenDropdownButton extends ToolbarButton {
     openFromFile: () => void,
     openFromURL: () => void,
     openNewRNotebook: () => void,
-    openNewPythonNotebook: () => void
+    openNewPythonNotebook: () => void,
+    downloadNotebook: () => void
   ) {
-    const commandOpenFile = 'jupytereverywhere:open-from-file';
-    const commandOpenUrl = 'jupytereverywhere:open-from-url';
-    const commandNewR = 'jupytereverywhere:new-r-notebook';
-    const commandNewPython = 'jupytereverywhere:new-python-notebook';
+    const commandOpenFile = 'jupytereverywhere:file-open-from-file';
+    const commandOpenUrl = 'jupytereverywhere:file-open-from-url';
+    const commandNewR = 'jupytereverywhere:file-new-r-notebook';
+    const commandNewPython = 'jupytereverywhere:file-new-python-notebook';
+    const commandDownload = 'jupytereverywhere:file-download-notebook';
 
     if (!commands.hasCommand(commandOpenFile)) {
       commands.addCommand(commandOpenFile, {
@@ -51,9 +53,18 @@ export class OpenDropdownButton extends ToolbarButton {
       });
     }
 
+    if (!commands.hasCommand(commandDownload)) {
+      commands.addCommand(commandDownload, {
+        label: 'Download notebook',
+        execute: () => {
+          downloadNotebook();
+        }
+      });
+    }
+
     super({
-      label: 'Open',
-      tooltip: 'Open or create a notebook',
+      label: 'File',
+      tooltip: 'File actions',
       onClick: () => {
         const menu = new Menu({ commands });
 
@@ -62,6 +73,8 @@ export class OpenDropdownButton extends ToolbarButton {
         menu.addItem({ type: 'separator' });
         menu.addItem({ command: commandNewR });
         menu.addItem({ command: commandNewPython });
+        menu.addItem({ type: 'separator' });
+        menu.addItem({ command: commandDownload });
 
         const anchor = this.node.getBoundingClientRect();
         menu.open(anchor.left, anchor.bottom);

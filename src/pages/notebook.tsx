@@ -243,41 +243,49 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     /**
      * Open notebook from URL
      */
-    const openNotebookFromProvidedURL = async (url: string): Promise<void> => {
-      try {
-        let fetchUrl = url.trim();
+const openNotebookFromProvidedURL = async (url: string): Promise<void> => {
+  try {
+    let fetchUrl = url.trim();
 
-        if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
-          fetchUrl = fetchUrl
-            .replace('https://github.com/', 'https://raw.githubusercontent.com/')
-            .replace('/blob/', '/');
-        }
+    // Strip accidental surrounding quotes copied from spreadsheets, CSVs, etc.
+    if (
+      (fetchUrl.startsWith('"') && fetchUrl.endsWith('"')) ||
+      (fetchUrl.startsWith("'") && fetchUrl.endsWith("'"))
+    ) {
+      fetchUrl = fetchUrl.slice(1, -1);
+    }
 
-        const response = await fetch(fetchUrl);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
-        }
+    // Convert normal GitHub blob URLs to raw notebook URLs immediately.
+    if (fetchUrl.includes('github.com') && fetchUrl.includes('/blob/')) {
+      fetchUrl = fetchUrl
+        .replace('https://github.com/', 'https://raw.githubusercontent.com/')
+        .replace('/blob/', '/');
+    }
 
-        const parsed = (await response.json()) as INotebookContent;
-        await openNotebookContent(parsed);
+    const response = await fetch(fetchUrl);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch notebook: ${response.status} ${response.statusText}`);
+    }
 
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.delete('from');
-        window.history.replaceState({}, '', currentUrl.toString());
-      } catch (error) {
-        console.error('Failed to open notebook from URL:', error);
-        alert('Failed to open notebook from URL.');
-      }
-    };
+    const parsed = (await response.json()) as INotebookContent;
+    await openNotebookContent(parsed);
 
-    const openNotebookFromURL = async (): Promise<void> => {
-      const url = window.prompt('Enter the URL of a .ipynb notebook file:');
-      if (!url) {
-        return;
-      }
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.delete('from');
+    window.history.replaceState({}, '', currentUrl.toString());
+  } catch (error) {
+    console.error('Failed to open notebook from URL:', error);
+    alert('Failed to open notebook from URL.');
+  }
+};
+const openNotebookFromURL = async (): Promise<void> => {
+  const url = window.prompt('Enter a GitHub notebook URL or raw .ipynb URL:');
+  if (!url) {
+    return;
+  }
 
-      await openNotebookFromProvidedURL(url);
-    };
+  await openNotebookFromProvidedURL(url);
+};
 
     if (notebookId) {
       void loadSharedNotebook(notebookId);
@@ -338,49 +346,39 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           })
       );
 
-      toolbarRegistry.addFactory(
-        toolbarName,
-        'upload',
-        () =>
-          new OpenDropdownButton(
-            commands,
-            () => {
-              const input = document.createElement('input');
-              input.type = 'file';
-              input.accept = '.ipynb,application/json';
-              input.onchange = async () => {
-                const file = input.files?.[0];
-                if (!file) {
-                  return;
-                }
-                await handleNotebookUpload(file);
-              };
-              input.click();
-            },
-            () => {
-              void openNotebookFromURL();
-            },
-            () => {
-              openNewNotebookWindow('r');
-            },
-            () => {
-              openNewNotebookWindow('python');
-            }
-          )
-      );
-
-      toolbarRegistry.addFactory(
-        toolbarName,
-        'downloadDropdown',
-        () =>
-          new ToolbarButton({
-            label: 'Download',
-            tooltip: 'Download notebook',
-            onClick: () => {
-              void commands.execute(Commands.downloadNotebookCommand);
-            }
-          })
-      );
+toolbarRegistry.addFactory(
+  toolbarName,
+  'upload',
+  () =>
+    new OpenDropdownButton(
+      commands,
+      () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.ipynb,application/json';
+        input.onchange = async () => {
+          const file = input.files?.[0];
+          if (!file) {
+            return;
+          }
+          await handleNotebookUpload(file);
+        };
+        input.click();
+      },
+      () => {
+        void openNotebookFromURL();
+      },
+      () => {
+        openNewNotebookWindow('r');
+      },
+      () => {
+        openNewNotebookWindow('python');
+      },
+      () => {
+        void commands.execute(Commands.downloadNotebookCommand);
+      }
+    )
+);
 
       toolbarRegistry.addFactory(
         toolbarName,

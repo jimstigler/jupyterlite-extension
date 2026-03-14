@@ -112,7 +112,12 @@ const openNewNotebookWindow = (kernelParam: 'r' | 'python'): void => {
 
   url.searchParams.set('kernel', kernelParam);
 
-  window.open(url.toString(), '_blank', 'noopener');
+  const newTab = window.open('about:blank', '_blank', 'noopener,noreferrer');
+  if (newTab) {
+    newTab.location.href = url.toString();
+  } else {
+    window.location.href = url.toString();
+  }
 };
 
     /**

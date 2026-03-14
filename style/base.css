@@ -813,3 +813,21 @@ jp-button[aria-label="Download"] svg {
 .jp-NotebookPanel-toolbar [data-jp-item-name='restart-and-run'] {
   display: none !important;
 }
+.ck-KernelIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 60px;
+  height: 28px;
+  padding: 0 10px;
+
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  background: #f6f8fa;
+  color: #412c88;
+}

@@ -2,6 +2,7 @@ import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application'
 import { OpenDropdownButton } from '../ui-components/OpenDropdownButton';
 import { NewDropdownButton } from '../ui-components/NewDropdownButton';
 import { RunDropdownButton } from '../ui-components/RunDropdownButton';
+import { KernelIndicator } from '../ui-components/KernelIndicator';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
 import { INotebookContent } from '@jupyterlab/nbformat';
@@ -386,6 +387,13 @@ toolbarRegistry.addFactory(
       }
     )
 );
+
+toolbarRegistry.addFactory(
+  'Notebook',
+  'ckKernelIndicator',
+  () => new KernelIndicator(tracker)
+);
+
     }
 
     void app.restored.then(() => {

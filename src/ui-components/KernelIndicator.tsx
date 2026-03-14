@@ -42,15 +42,17 @@ export class KernelIndicator extends Widget {
       return;
     }
 
-    const kernelName =
-      panel.sessionContext.session?.kernel?.name ?? '';
+    const kernelName = panel.sessionContext.session?.kernel?.name ?? '';
+    const lower = kernelName.toLowerCase();
 
-    let label = 'Unknown';
+    let label = '—';
 
-    if (kernelName.includes('r') || kernelName.includes('ir')) {
+    if (lower.includes('python')) {
+      label = 'Py';
+    } else if (lower === 'xr' || lower === 'ir' || lower.includes('r')) {
       label = 'R';
-    } else if (kernelName.includes('python')) {
-      label = 'Python';
+    } else if (kernelName) {
+      label = kernelName;
     }
 
     this.node.textContent = label;

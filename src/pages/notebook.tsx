@@ -382,12 +382,11 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
           })
       );
 
-      if (toolbarName === 'Notebook') {
-        toolbarRegistry.addFactory(
-          toolbarName,
-          'kernelStatus',
-          () => new KernelIndicator(tracker)
-        );
+toolbarRegistry.addFactory(
+  toolbarName,
+  'jeKernelSwitcher',
+  () => new KernelIndicator(tracker)
+);
       }
     }
 

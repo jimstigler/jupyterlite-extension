@@ -1,5 +1,6 @@
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
 import { OpenDropdownButton } from '../ui-components/OpenDropdownButton';
+import { NewDropdownButton } from '../ui-components/NewDropdownButton';
 import { RunDropdownButton } from '../ui-components/RunDropdownButton';
 import { ILiteRouter } from '@jupyterlite/application';
 import { INotebookTracker, INotebookWidgetFactory } from '@jupyterlab/notebook';
@@ -13,7 +14,6 @@ import { PageConfig } from '@jupyterlab/coreutils';
 import { Commands } from '../commands';
 import { SharingService } from '../sharing-service';
 import { VIEW_ONLY_NOTEBOOK_FACTORY, IViewOnlyNotebookTracker } from '../view-only';
-import { KernelSwitcherDropdownButton } from '../ui-components/KernelSwitcherDropdownButton';
 import { KERNEL_URL_TO_NAME, KERNEL_DISPLAY_NAMES } from '../kernels';
 import { handleNotebookUpload, openNotebookContent } from '../upload';
 
@@ -101,6 +101,19 @@ export const notebookPlugin: JupyterFrontEndPlugin<void> = {
     if (notebookId?.endsWith('.ipynb')) {
       notebookId = notebookId.slice(0, -6);
     }
+
+const openNewNotebookWindow = (kernelParam: 'r' | 'python'): void => {
+  const url = new URL(window.location.href);
+
+  url.searchParams.delete('notebook');
+  url.searchParams.delete('uploaded-notebook');
+  url.searchParams.delete('from');
+  url.searchParams.delete('tab');
+
+  url.searchParams.set('kernel', kernelParam);
+
+  window.open(url.toString(), '_blank', 'noopener');
+};
 
     /**
      * Load a shared notebook from the CKHub API
@@ -359,11 +372,20 @@ toolbarRegistry.addFactory(
     })
 );
 
-      toolbarRegistry.addFactory(
-        'Notebook',
-        'jeKernelSwitcher',
-        () => new KernelSwitcherDropdownButton(commands, tracker)
-      );
+toolbarRegistry.addFactory(
+  'Notebook',
+  'jeKernelSwitcher',
+  () =>
+    new NewDropdownButton(
+      commands,
+      () => {
+        openNewNotebookWindow('r');
+      },
+      () => {
+        openNewNotebookWindow('python');
+      }
+    )
+);
     }
 
     void app.restored.then(() => {

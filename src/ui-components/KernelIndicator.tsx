@@ -48,7 +48,7 @@ export class KernelIndicator extends Widget {
     let label = '—';
 
     if (lower.includes('python')) {
-      label = 'Py';
+      label = 'Python';
     } else if (lower === 'xr' || lower === 'ir' || lower.includes('r')) {
       label = 'R';
     } else if (kernelName) {

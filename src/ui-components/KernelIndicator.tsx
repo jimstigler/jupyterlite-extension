@@ -12,11 +12,11 @@ export class KernelIndicator extends Widget {
 
     tracker.currentChanged.connect(() => {
       this.connectSignals();
-      this.update();
+      this.refreshIndicator();
     });
 
     this.connectSignals();
-    this.update();
+    this.refreshIndicator();
   }
 
   private connectSignals(): void {
@@ -24,15 +24,15 @@ export class KernelIndicator extends Widget {
     if (!panel) return;
 
     panel.sessionContext.statusChanged.connect(() => {
-      this.update();
+      this.refreshIndicator();
     });
 
     panel.sessionContext.kernelChanged.connect(() => {
-      this.update();
+      this.refreshIndicator();
     });
   }
 
-  private update(): void {
+  private refreshIndicator(): void {
     const panel = this.tracker.currentWidget;
 
     if (!panel) {
@@ -40,9 +40,7 @@ export class KernelIndicator extends Widget {
       return;
     }
 
-    const kernelName =
-      panel.sessionContext.session?.kernel?.name ?? '';
-
+    const kernelName = panel.sessionContext.session?.kernel?.name ?? '';
     const status = panel.sessionContext.kernelDisplayStatus;
 
     let label = 'Python';
@@ -53,10 +51,7 @@ export class KernelIndicator extends Widget {
 
     this.node.textContent = label;
 
-    this.node.classList.remove(
-      'ck-kernel-starting',
-      'ck-kernel-ready'
-    );
+    this.node.classList.remove('ck-kernel-starting', 'ck-kernel-ready');
 
     if (status === 'idle') {
       this.node.classList.add('ck-kernel-ready');

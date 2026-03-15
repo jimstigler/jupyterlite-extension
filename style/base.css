@@ -813,20 +813,19 @@ jp-button[aria-label="Download"] svg {
 .jp-NotebookPanel-toolbar [data-jp-item-name='restart-and-run'] {
   display: none !important;
 }
+.jp-NotebookPanel-toolbar [data-jp-item-name='kernelStatus'] {
+  display: none !important;
+}
 .ck-KernelIndicator {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  font-weight: 600;
+  padding: 0 6px;
+  font-size: 14px;
+}
 
-  width: 40px;
-  height: 28px;
+.ck-kernel-starting {
+  color: #6b7280;   /* gray */
+}
 
-  border: 1px solid #d0d7de;
-  border-radius: 6px;
-
-  font-size: 13px;
-  font-weight: 500;
-
-  background: #f6f8fa;
-  color: #412c88;
+.ck-kernel-ready {
+  color: #2e7d32;   /* green */
 }

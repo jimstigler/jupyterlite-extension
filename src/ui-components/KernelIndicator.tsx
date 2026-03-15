@@ -7,34 +7,32 @@ export class KernelIndicator extends Widget {
   constructor(tracker: INotebookTracker) {
     super();
     this.tracker = tracker;
+
     this.addClass('ck-KernelIndicator');
 
-    this.updateLabel();
-
     tracker.currentChanged.connect(() => {
-      this.updateLabel();
       this.connectSignals();
+      this.update();
     });
 
     this.connectSignals();
+    this.update();
   }
 
   private connectSignals(): void {
     const panel = this.tracker.currentWidget;
-    if (!panel) {
-      return;
-    }
-
-    panel.sessionContext.kernelChanged.connect(() => {
-      this.updateLabel();
-    });
+    if (!panel) return;
 
     panel.sessionContext.statusChanged.connect(() => {
-      this.updateLabel();
+      this.update();
+    });
+
+    panel.sessionContext.kernelChanged.connect(() => {
+      this.update();
     });
   }
 
-  private updateLabel(): void {
+  private update(): void {
     const panel = this.tracker.currentWidget;
 
     if (!panel) {
@@ -42,19 +40,28 @@ export class KernelIndicator extends Widget {
       return;
     }
 
-    const kernelName = panel.sessionContext.session?.kernel?.name ?? '';
-    const lower = kernelName.toLowerCase();
+    const kernelName =
+      panel.sessionContext.session?.kernel?.name ?? '';
 
-    let label = '—';
+    const status = panel.sessionContext.kernelDisplayStatus;
 
-    if (lower.includes('python')) {
-      label = 'Python';
-    } else if (lower === 'xr' || lower === 'ir' || lower.includes('r')) {
+    let label = 'Python';
+
+    if (kernelName === 'xr' || kernelName === 'ir') {
       label = 'R';
-    } else if (kernelName) {
-      label = kernelName;
     }
 
     this.node.textContent = label;
+
+    this.node.classList.remove(
+      'ck-kernel-starting',
+      'ck-kernel-ready'
+    );
+
+    if (status === 'idle') {
+      this.node.classList.add('ck-kernel-ready');
+    } else {
+      this.node.classList.add('ck-kernel-starting');
+    }
   }
 }

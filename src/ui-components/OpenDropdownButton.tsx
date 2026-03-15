@@ -68,13 +68,13 @@ export class OpenDropdownButton extends ToolbarButton {
       onClick: () => {
         const menu = new Menu({ commands });
 
-        menu.addItem({ command: commandOpenFile });
-        menu.addItem({ command: commandOpenUrl });
-        menu.addItem({ type: 'separator' });
-        menu.addItem({ command: commandNewR });
-        menu.addItem({ command: commandNewPython });
-        menu.addItem({ type: 'separator' });
-        menu.addItem({ command: commandDownload });
+		menu.addItem({ command: commandNewR });
+		menu.addItem({ command: commandNewPython });
+		menu.addItem({ type: 'separator' });
+		menu.addItem({ command: commandOpenFile });
+		menu.addItem({ command: commandOpenUrl });
+		menu.addItem({ type: 'separator' });
+		menu.addItem({ command: commandDownload });
 
         const anchor = this.node.getBoundingClientRect();
         menu.open(anchor.left, anchor.bottom);

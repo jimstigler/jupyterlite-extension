@@ -823,9 +823,26 @@ jp-button[aria-label="Download"] svg {
 }
 
 .ck-kernel-starting {
-  color: #6b7280;   /* gray */
+  color: #7a7a7a;
+  animation: ck-kernel-pulse 1.2s ease-in-out infinite;
 }
 
 .ck-kernel-ready {
-  color: #2e7d32;   /* green */
+  color: #16a34a;
+}
+
+@keyframes ck-kernel-pulse {
+  0% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.45;
+  }
+}
+
+.jp-NotebookPanel-toolbar [data-jp-item-name='kernelStatus'] {
+  display: none !important;
 }
